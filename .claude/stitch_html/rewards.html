@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Lumina Nature - Rewards &amp; Activity</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-primary-fixed": "#002116",
+                    "primary-fixed": "#60fcc6",
+                    "tertiary-fixed": "#ffdbce",
+                    "surface-container-highest": "#e2e2e5",
+                    "outline-variant": "#bbcac1",
+                    "surface-dim": "#dadadc",
+                    "tertiary-fixed-dim": "#ffb598",
+                    "on-secondary-container": "#2e6d5f",
+                    "surface-container-high": "#e8e8ea",
+                    "surface-container-lowest": "#ffffff",
+                    "primary": "#006c4f",
+                    "secondary-fixed-dim": "#94d3c1",
+                    "tertiary": "#9a451f",
+                    "on-error-container": "#93000a",
+                    "inverse-primary": "#3adfab",
+                    "surface-variant": "#e2e2e5",
+                    "on-primary": "#ffffff",
+                    "background": "#f9f9fc",
+                    "on-primary-fixed-variant": "#00513b",
+                    "on-surface": "#1a1c1e",
+                    "on-tertiary": "#ffffff",
+                    "on-secondary-fixed-variant": "#065043",
+                    "on-error": "#ffffff",
+                    "surface": "#f9f9fc",
+                    "secondary": "#29695b",
+                    "on-tertiary-fixed": "#370e00",
+                    "on-background": "#1a1c1e",
+                    "surface-container-low": "#f3f3f6",
+                    "surface-container": "#eeeef0",
+                    "on-primary-container": "#004d38",
+                    "secondary-container": "#acedda",
+                    "error": "#ba1a1a",
+                    "tertiary-container": "#ff9467",
+                    "on-tertiary-fixed-variant": "#7b2f09",
+                    "primary-container": "#00c896",
+                    "on-secondary-fixed": "#00201a",
+                    "outline": "#6c7a72",
+                    "on-tertiary-container": "#762b05",
+                    "on-surface-variant": "#3c4a43",
+                    "inverse-surface": "#2f3133",
+                    "error-container": "#ffdad6",
+                    "surface-bright": "#f9f9fc",
+                    "inverse-on-surface": "#f0f0f3",
+                    "primary-fixed-dim": "#3adfab",
+                    "on-secondary": "#ffffff",
+                    "surface-tint": "#006c4f",
+                    "secondary-fixed": "#afefdd"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-mobile": "20px",
+                    "gutter": "16px",
+                    "base": "8px",
+                    "radius-outer": "24px",
+                    "radius-inner": "12px"
+            },
+            "fontFamily": {
+                    "title-md": ["Plus Jakarta Sans"],
+                    "headline-lg": ["Plus Jakarta Sans"],
+                    "label-md": ["Plus Jakarta Sans"],
+                    "body-lg": ["Plus Jakarta Sans"],
+                    "headline-lg-mobile": ["Plus Jakarta Sans"],
+                    "display-lg": ["Plus Jakarta Sans"],
+                    "body-sm": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                    "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                    "display-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-image: url('https://lh3.googleusercontent.com/aida/ADBb0uiVLctp3oXgk2q6cq2OQHiq3TwbchvRnXLsnVHhqpOBLieDWc6zKiUcXhPOGRYlvlngSKJuFigXCd-FmbH4efBhHrSFwToi3Rh1betiZpQQrRrnDSfEtPRSSZp4yiHuumrtgu0X6OP5l7C6O5rP8eTFHG68YOV0bGzBEPnr421kAgbF6tqWH3WD5LPFs-u8x7AxnX_jJX42NAn1G-2VLBMqD8rbV4mbsOoQuPEy_qUz3EPe8uzxmF0PIK1y');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .chart-bar {
+            transition: height 1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+    </style>
+</head>
+<body class="min-h-screen text-on-surface selection:bg-primary-container selection:text-on-primary-container">
+<!-- Top App Bar -->
+<header class="w-full top-0 sticky bg-white/40 dark:bg-black/40 backdrop-blur-[24px] z-50 flex justify-between items-center px-margin-mobile py-base border-b border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.08)]">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden border border-white/40">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="A professional studio headshot of a smiling young person with warm lighting and a soft bokeh background. The aesthetic is clean and high-end, featuring natural skin textures and a friendly expression that complements the premium, eco-conscious brand identity of Lumina Nature. The overall mood is approachable and modern." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBwM6rwq2xJPHCjMOQtJEg8dVoyHwOJovQIDkGfQ5PdQOb0lY3jcjNd_TgI44Pz1ytdFDUlgk4xz3P9HvC08K0OewQDIY6cQrJyjyBN2BCxNjT8jomPE-zXjxpffZwIaRuXjtll5kXeKuTBweoB5YFexIdksff4X1pKoW0Y5YCiQLuy-q3h2gqoyFL5NnimlxGs3H3EiMS4qkRyqznnrSTqGhLNm1QwAh-zsitPe-eQtaFTpcyZuUbPnE8w4SSeswzVF_1wTl45pWh2"/>
+</div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-primary tracking-tight">Lumina Nature</h1>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full text-primary hover:bg-white/10 transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+</header>
+<main class="px-margin-mobile pt-gutter max-w-md mx-auto space-y-gutter pb-12">
+<!-- Large Glassmorphism Card: Total Points -->
+<section class="glass-panel rounded-radius-outer p-6 relative overflow-hidden group shadow-[0_8px_32px_rgba(0,0,0,0.08)]">
+<div class="relative z-10">
+<p class="font-label-md text-label-md text-on-surface-variant mb-1">CURRENT BALANCE</p>
+<div class="flex items-baseline gap-2">
+<span class="font-display-lg text-display-lg text-primary">Total Points: 1,250 P</span>
+</div>
+<div class="mt-6 flex gap-4">
+<button class="flex-1 bg-primary text-on-primary font-label-md text-label-md py-3 rounded-xl shadow-lg active:scale-95 transition-transform">
+                        REDEEM NOW
+                    </button>
+<button class="flex-1 glass-panel text-on-surface-variant font-label-md text-label-md py-3 rounded-xl border border-white/20 active:scale-95 transition-transform">
+                        TIER DETAILS
+                    </button>
+</div>
+</div>
+<!-- Decorative Element -->
+<div class="absolute -bottom-10 -right-10 w-40 h-40 bg-primary/10 blur-3xl rounded-full"></div>
+</section>
+<!-- Weekly Eco-Impact Bar Chart -->
+<section class="glass-panel rounded-radius-outer p-6 shadow-[0_8px_32px_rgba(0,0,0,0.08)]">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-title-md text-title-md text-on-surface">Weekly Eco-Impact</h3>
+<span class="material-symbols-outlined text-primary" data-icon="analytics">analytics</span>
+</div>
+<div class="flex items-end justify-between h-32 gap-2 px-2">
+<div class="flex flex-col items-center flex-1 gap-2">
+<div class="w-full bg-primary/20 rounded-t-lg relative group">
+<div class="chart-bar w-full bg-primary-container rounded-t-lg h-[40%] group-hover:bg-primary transition-colors"></div>
+</div>
+<span class="font-label-md text-label-md text-on-surface-variant">M</span>
+</div>
+<div class="flex flex-col items-center flex-1 gap-2">
+<div class="w-full bg-primary/20 rounded-t-lg relative group">
+<div class="chart-bar w-full bg-primary-container rounded-t-lg h-[65%] group-hover:bg-primary transition-colors"></div>
+</div>
+<span class="font-label-md text-label-md text-on-surface-variant">T</span>
+</div>
+<div class="flex flex-col items-center flex-1 gap-2">
+<div class="w-full bg-primary/20 rounded-t-lg relative group">
+<div class="chart-bar w-full bg-primary rounded-t-lg h-[90%]"></div>
+</div>
+<span class="font-label-md text-label-md text-on-surface-variant font-bold text-primary">W</span>
+</div>
+<div class="flex flex-col items-center flex-1 gap-2">
+<div class="w-full bg-primary/20 rounded-t-lg relative group">
+<div class="chart-bar w-full bg-primary-container rounded-t-lg h-[30%] group-hover:bg-primary transition-colors"></div>
+</div>
+<span class="font-label-md text-label-md text-on-surface-variant">T</span>
+</div>
+<div class="flex flex-col items-center flex-1 gap-2">
+<div class="w-full bg-primary/20 rounded-t-lg relative group">
+<div class="chart-bar w-full bg-primary-container rounded-t-lg h-[55%] group-hover:bg-primary transition-colors"></div>
+</div>
+<span class="font-label-md text-label-md text-on-surface-variant">F</span>
+</div>
+<div class="flex flex-col items-center flex-1 gap-2">
+<div class="w-full bg-primary/20 rounded-t-lg relative group">
+<div class="chart-bar w-full bg-primary-container rounded-t-lg h-[20%] group-hover:bg-primary transition-colors"></div>
+</div>
+<span class="font-label-md text-label-md text-on-surface-variant">S</span>
+</div>
+<div class="flex flex-col items-center flex-1 gap-2">
+<div class="w-full bg-primary/20 rounded-t-lg relative group">
+<div class="chart-bar w-full bg-primary-container rounded-t-lg h-[45%] group-hover:bg-primary transition-colors"></div>
+</div>
+<span class="font-label-md text-label-md text-on-surface-variant">S</span>
+</div>
+</div>
+<p class="mt-4 font-body-sm text-body-sm text-on-surface-variant text-center">
+                You've reduced your carbon footprint by <span class="text-primary font-bold">12kg</span> this week.
+            </p>
+</section>
+<!-- Activity History -->
+<section class="space-y-4">
+<div class="flex justify-between items-center px-2">
+<h3 class="font-title-md text-title-md text-on-surface">Recent Activity</h3>
+<button class="font-label-md text-label-md text-primary hover:underline">VIEW ALL</button>
+</div>
+<div class="space-y-3">
+<!-- Activity Item 1 -->
+<div class="glass-panel rounded-radius-inner p-4 flex items-center justify-between hover:bg-white/50 transition-colors cursor-pointer group">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" data-icon="coffee">coffee</span>
+</div>
+<div>
+<p class="font-body-lg text-body-lg text-on-surface">Cafe Receipt</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Today, 10:24 AM</p>
+</div>
+</div>
+<span class="font-title-md text-title-md text-primary">+10P</span>
+</div>
+<!-- Activity Item 2 -->
+<div class="glass-panel rounded-radius-inner p-4 flex items-center justify-between hover:bg-white/50 transition-colors cursor-pointer group">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" data-icon="shopping_bag">shopping_bag</span>
+</div>
+<div>
+<p class="font-body-lg text-body-lg text-on-surface">Eco-bag usage</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Yesterday, 4:15 PM</p>
+</div>
+</div>
+<span class="font-title-md text-title-md text-primary">+5P</span>
+</div>
+<!-- Activity Item 3 -->
+<div class="glass-panel rounded-radius-inner p-4 flex items-center justify-between hover:bg-white/50 transition-colors cursor-pointer group">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-tertiary-container flex items-center justify-center text-on-tertiary-container group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" data-icon="recycling">recycling</span>
+</div>
+<div>
+<p class="font-body-lg text-body-lg text-on-surface">Recycling Bin Drop-off</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">May 12, 11:30 AM</p>
+</div>
+</div>
+<span class="font-title-md text-title-md text-primary">+25P</span>
+</div>
+<!-- Activity Item 4 -->
+<div class="glass-panel rounded-radius-inner p-4 flex items-center justify-between hover:bg-white/50 transition-colors cursor-pointer group">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-surface-container-highest flex items-center justify-center text-on-surface-variant group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" data-icon="electric_bolt">electric_bolt</span>
+</div>
+<div>
+<p class="font-body-lg text-body-lg text-on-surface">Smart Meter Sync</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">May 11, 8:00 AM</p>
+</div>
+</div>
+<span class="font-title-md text-title-md text-primary">+15P</span>
+</div>
+</div>
+</section>
+</main><button class="fixed bottom-6 left-6 w-14 h-14 rounded-full glass-panel flex items-center justify-center text-primary shadow-lg z-50 hover:bg-white/50 active:scale-90 transition-all duration-200">
+<span class="material-symbols-outlined" style="font-variation-settings: 'wght' 600;">arrow_back</span>
+</button>
+<!-- Bottom Navigation Bar -->
+<script>
+        // Simple entry animation for chart bars
+        document.addEventListener('DOMContentLoaded', () => {
+            const bars = document.querySelectorAll('.chart-bar');
+            bars.forEach((bar, index) => {
+                const targetHeight = bar.style.height;
+                bar.style.height = '0%';
+                setTimeout(() => {
+                    bar.style.height = targetHeight;
+                }, 200 + (index * 100));
+            });
+        });
+
+        // Hover interaction for activity items
+        const items = document.querySelectorAll('.glass-panel.cursor-pointer');
+        items.forEach(item => {
+            item.addEventListener('mouseenter', () => {
+                item.style.transform = 'translateY(-2px)';
+                item.style.boxShadow = '0 12px 40px rgba(0,0,0,0.12)';
+            });
+            item.addEventListener('mouseleave', () => {
+                item.style.transform = 'translateY(0)';
+                item.style.boxShadow = '0 8px 32px rgba(0,0,0,0.08)';
+            });
+        });
+    </script>
+</body></html>
