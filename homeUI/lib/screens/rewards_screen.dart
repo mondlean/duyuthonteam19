@@ -397,7 +397,7 @@ class _LeaderboardCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
-            '전국 랭킹 Top 5',
+            '전국 랭킹',
             style: AppTextStyles.titleMd.copyWith(
               color: AppColors.onSurface,
             ),
