@@ -1,4 +1,4 @@
-package com.duyouthon.login;
+package com.duyouthon.user;
 
 
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,12 +16,24 @@ public class UserController {
 
     @PostMapping ("/users")
     public String createUser(@RequestBody UserRequest request) {
-        int id = request.getId();
+        String loginId = request.getLoginId();
+        String password = request.getPassword();
         String name = request.getName();
         String area = request.getArea();
+        String city = request.getCity();
 
-        userService.join(id, name, area);
+        userService.join(loginId,password,name,area,city);
 
         return "정상적으로 회원가입이 완료되었습니다 !";
     }
+
+    @PostMapping("/login")
+    public String loginUser(@RequestBody LoginRequest request) {
+        try {
+            return userService.login(request.getLoginId(), request.getPassword());
+        } catch (IllegalArgumentException e) {
+            return e.getMessage();
+        }
+    }
+
 }
