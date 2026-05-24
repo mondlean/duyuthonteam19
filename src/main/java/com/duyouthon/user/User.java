@@ -30,6 +30,25 @@ public class User {
     @Column(name = "city")
     private String city;
 
+    @Column(name = "point")
+    private int point = 0;
+
+    public void addPoint(int amount) {
+        this.point += amount;
+    }
+
+    public String getStatusByPoint() {
+        if (this.point < 500) {
+            return "새싹";
+        } else if (this.point < 800) {
+            return "풀";
+        } else if (this.point < 1000) {
+            return "꽃봉오리";
+        } else {
+            return "꽃";
+        }
+    }
+
     public User() {}
 
     public User(String loginId, String password, String name, String userTag, String area, String city) {
