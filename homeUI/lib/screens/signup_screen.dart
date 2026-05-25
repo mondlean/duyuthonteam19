@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import '../globals.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_symbols_icons/symbols.dart';
@@ -137,7 +140,41 @@ class _SignupScreenState extends State<SignupScreen> {
                     ),
                     const SizedBox(height: 28),
                     FilledButton(
-                      onPressed: () => context.go('/home'),
+                      onPressed: () async {
+                        try {
+                          final response = await http.post(
+                            Uri.parse('${Globals.loginBaseUrl}/users'),
+                            headers: {'Content-Type': 'application/json'},
+                            body: jsonEncode({
+                              'loginId': _idCtrl.text,
+                              'password': _pwCtrl.text,
+                              'name': _nameCtrl.text,
+                              'area': _district ?? '',
+                              'city': _city ?? '',
+                            }),
+                          );
+                          if (response.statusCode == 200) {
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('회원가입이 완료되었습니다!')),
+                              );
+                              context.go('/login');
+                            }
+                          } else {
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('회원가입 실패: ${response.body}')),
+                              );
+                            }
+                          }
+                        } catch (e) {
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('오류 발생: $e')),
+                            );
+                          }
+                        }
+                      },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [

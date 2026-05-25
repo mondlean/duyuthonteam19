@@ -1,4 +1,7 @@
 import 'dart:ui';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import '../globals.dart';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
@@ -85,6 +88,39 @@ class _ReceiptScanScreenState extends State<ReceiptScanScreen>
     super.dispose();
   }
 
+  Future<void> _takePictureAndUpload() async {
+    if (_camera == null || !_camera!.value.isInitialized) return;
+    try {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(child: CircularProgressIndicator()),
+      );
+      final image = await _camera!.takePicture();
+      final request = http.MultipartRequest('POST', Uri.parse('${Globals.pointBaseUrl}/point/upload'));
+      request.fields['loginId'] = Globals.loginId ?? 'testUser';
+      request.files.add(await http.MultipartFile.fromPath('file', image.path));
+      final response = await request.send();
+      if (context.mounted) Navigator.pop(context); // hide loading
+      if (response.statusCode == 200) {
+        if (context.mounted) context.go('/rewards');
+      } else {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('업로드 실패: ${response.statusCode}')),
+          );
+        }
+      }
+    } catch (e) {
+      if (context.mounted) Navigator.pop(context);
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('오류 발생: $e')),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -127,7 +163,7 @@ class _ReceiptScanScreenState extends State<ReceiptScanScreen>
             left: 0,
             right: 0,
             bottom: 240,
-            child: _CameraControls(),
+            child: _CameraControls(onCapture: _takePictureAndUpload),
           ),
           Align(
             alignment: Alignment.bottomCenter,
@@ -347,6 +383,10 @@ class _ScanFrame extends StatelessWidget {
 }
 
 class _CameraControls extends StatelessWidget {
+  const _CameraControls({required this.onCapture});
+
+  final VoidCallback onCapture;
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -355,7 +395,7 @@ class _CameraControls extends StatelessWidget {
         _RoundIconButton(icon: Symbols.flash_off, onTap: () {}),
         const SizedBox(width: 36),
         GestureDetector(
-          onTap: () {},
+          onTap: onCapture,
           child: Container(
             width: 80,
             height: 80,

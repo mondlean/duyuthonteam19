@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import '../globals.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_symbols_icons/symbols.dart';
@@ -88,7 +91,34 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     const SizedBox(height: 24),
                     FilledButton(
-                      onPressed: () => context.go('/home'),
+                      onPressed: () async {
+                        try {
+                          final response = await http.post(
+                            Uri.parse('${Globals.loginBaseUrl}/login'),
+                            headers: {'Content-Type': 'application/json'},
+                            body: jsonEncode({
+                              'loginId': _idCtrl.text,
+                              'password': _pwCtrl.text,
+                            }),
+                          );
+                          if (response.statusCode == 200) {
+                            Globals.loginId = _idCtrl.text;
+                            if (context.mounted) context.go('/home');
+                          } else {
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text(response.body)),
+                              );
+                            }
+                          }
+                        } catch (e) {
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('로그인 실패: $e')),
+                            );
+                          }
+                        }
+                      },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
