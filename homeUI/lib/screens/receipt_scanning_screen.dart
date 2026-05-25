@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import '../utils/globals.dart';
 import 'dart:typed_data';
 import 'dart:ui';
 
@@ -32,9 +35,51 @@ class _ReceiptScanningScreenState extends State<ReceiptScanningScreen>
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 3), () {
-      if (mounted) context.pushReplacement('/scan-result');
-    });
+    _performScan();
+  }
+
+  Future<void> _performScan() async {
+    try {
+      // FastAPI OCR 호출
+      final request = http.MultipartRequest(
+        'POST',
+        Uri.parse('${Globals.plantBaseUrl}/ocr'),
+      );
+      request.files.add(
+        http.MultipartFile.fromBytes(
+          'image',
+          widget.imageBytes,
+          filename: 'receipt.jpg',
+        ),
+      );
+
+      final streamedResponse = await request.send();
+      final response = await http.Response.fromStream(streamedResponse);
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        if (data['success'] == true) {
+          // 분석 성공 -> 결과 화면으로 데이터 전달
+          if (mounted) {
+            context.pushReplacement('/scan-result', extra: data);
+          }
+        } else {
+          throw Exception(data['message'] ?? '분석 실패');
+        }
+      } else {
+        throw Exception('서버 응답 오류 (${response.statusCode})');
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('에러 발생: $e'),
+            backgroundColor: AppColors.error,
+          ),
+        );
+        context.pushReplacement('/scan');
+      }
+    }
   }
 
   @override

@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 class Globals {
   static String? loginId;
 
-  /// eco_spring_login=8081, eco_spring_point=8080
+  /// Spring Boot: 8080, FastAPI: 8000
   static String get _host {
     if (kIsWeb) return 'http://127.0.0.1';
     if (defaultTargetPlatform == TargetPlatform.android) {
@@ -12,6 +12,6 @@ class Globals {
     return 'http://127.0.0.1';
   }
 
-  static String get loginBaseUrl => '$_host:8081';
-  static String get pointBaseUrl => '$_host:8080';
+  static String get springBaseUrl => '$_host:8080';
+  static String get plantBaseUrl => '$_host:8000';
 }

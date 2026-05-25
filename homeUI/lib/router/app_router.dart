@@ -49,7 +49,9 @@ GoRouter buildRouter() {
       ),
       GoRoute(
         path: '/scan-result',
-        builder: (_, __) => const ReceiptResultScreen(),
+        builder: (context, state) => ReceiptResultScreen(
+          data: state.extra as Map<String, dynamic>?,
+        ),
       ),
       GoRoute(
         path: '/rewards',

@@ -1,6 +1,8 @@
 package com.duyouthon.user;
 
 
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,6 +38,17 @@ public class UserController {
         } catch (IllegalArgumentException e) {
             return e.getMessage();
         }
+    }
+
+    @GetMapping("/{loginId}")
+    public User getUser(@PathVariable String loginId) {
+        return userService.getUser(loginId);
+    }
+
+    @PostMapping("/update-plant")
+    public String updatePlant(@RequestBody UserRequest request) {
+        userService.updatePlant(request.getLoginId(), request.getPlant());
+        return "식물 선택이 완료되었습니다.";
     }
 
 }

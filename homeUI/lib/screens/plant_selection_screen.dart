@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import '../utils/globals.dart';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -216,7 +219,34 @@ class _PlantSelectionScreenState extends State<PlantSelectionScreen>
                       elevation: 6,
                       shadowColor: AppColors.primaryContainer.withValues(alpha: 0.4),
                     ),
-                    onPressed: _selected != null ? () => context.go('/home') : null,
+                    onPressed: _selected != null
+                        ? () async {
+                            try {
+                              // 식물 선택 정보 저장
+                              final plantName = _plants[_selected!].name;
+                              final response = await http.post(
+                                Uri.parse('${Globals.springBaseUrl}/users/update-plant'),
+                                headers: {'Content-Type': 'application/json'},
+                                body: jsonEncode({
+                                  'loginId': Globals.loginId ?? 'testUser',
+                                  'plant': plantName,
+                                }),
+                              );
+
+                              if (response.statusCode == 200) {
+                                if (context.mounted) context.go('/home');
+                              } else {
+                                throw Exception('저장 실패: ${response.statusCode}');
+                              }
+                            } catch (e) {
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text('오류 발생: $e')),
+                                );
+                              }
+                            }
+                          }
+                        : null,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [

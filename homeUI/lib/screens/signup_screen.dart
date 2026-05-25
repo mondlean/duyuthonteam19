@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import '../utils/globals.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_symbols_icons/symbols.dart';
@@ -75,22 +78,28 @@ class _SignupScreenState extends State<SignupScreen> {
                   child: Row(
                     children: [
                       Expanded(
-                        child: ListView(
-                          children: _regionData.keys.map((c) => ListTile(
-                            title: Text(c, style: AppTextStyles.koBody(14)),
-                            selected: _city == c,
-                            onTap: () => setModalState(() { setState(() => _city = c); _district = null; }),
-                          )).toList(),
+                        child: Material(
+                          color: Colors.transparent,
+                          child: ListView(
+                            children: _regionData.keys.map((c) => ListTile(
+                              title: Text(c, style: AppTextStyles.koBody(14)),
+                              selected: _city == c,
+                              onTap: () => setModalState(() { setState(() => _city = c); _district = null; }),
+                            )).toList(),
+                          ),
                         ),
                       ),
                       const VerticalDivider(),
                       Expanded(
-                        child: ListView(
-                          children: availableDistricts.map((d) => ListTile(
-                            title: Text(d, style: AppTextStyles.koBody(14)),
-                            selected: _district == d,
-                            onTap: () { setState(() => _district = d); Navigator.pop(context); },
-                          )).toList(),
+                        child: Material(
+                          color: Colors.transparent,
+                          child: ListView(
+                            children: availableDistricts.map((d) => ListTile(
+                              title: Text(d, style: AppTextStyles.koBody(14)),
+                              selected: _district == d,
+                              onTap: () { setState(() => _district = d); Navigator.pop(context); },
+                            )).toList(),
+                          ),
                         ),
                       ),
                     ],
@@ -158,14 +167,53 @@ class _SignupScreenState extends State<SignupScreen> {
                     ),
                     const SizedBox(height: 28),
                     FilledButton(
- featnew
-                      onPressed: () => context.go('/home'),
-                      child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                        Text('가입하기', style: AppTextStyles.koBody(18, weight: FontWeight.w700, color: AppColors.onPrimaryContainer)),
-                        const SizedBox(width: 6),
-                        const Icon(Symbols.arrow_forward, size: 20),
-                      ]),
-
+                      onPressed: () async {
+                        try {
+                          final response = await http.post(
+                            Uri.parse('${Globals.springBaseUrl}/users/register'),
+                            headers: {'Content-Type': 'application/json'},
+                            body: jsonEncode({
+                              'loginId': _idCtrl.text,
+                              'password': _pwCtrl.text,
+                              'name': _nameCtrl.text,
+                              'area': _district ?? '',
+                              'city': _city ?? '',
+                              'plant': '새싹', // Default plant
+                            }),
+                          );
+                          if (response.statusCode == 200) {
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('회원가입이 완료되었습니다!')),
+                              );
+                              context.go('/login');
+                            }
+                          } else {
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('회원가입 실패: ${response.body}')),
+                              );
+                            }
+                          }
+                        } catch (e) {
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('서버 연결 오류: $e')),
+                            );
+                          }
+                        }
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('가입하기',
+                              style: AppTextStyles.koBody(18,
+                                  weight: FontWeight.w700,
+                                  color: AppColors.onPrimaryContainer)),
+                          const SizedBox(width: 6),
+                          const Icon(Symbols.arrow_forward, size: 20),
+                        ],
+                      ),
                     ),
                   ],
                 ),

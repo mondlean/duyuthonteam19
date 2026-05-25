@@ -8,6 +8,7 @@ from google.cloud import vision
 from services.item_parser import parse_items
 from services.eco_analyzer import analyze_items
 from services.plant_service import get_plant_status
+from services.ocr_service import extract_text_with_layout
 
 
 # =========================
@@ -75,23 +76,13 @@ async def ocr_image(
         # Google Vision OCR
         # =========================
 
-        client = vision.ImageAnnotatorClient()
-
-        image_data = vision.Image(
-            content=content
-        )
-
-        response = client.text_detection(
-            image=image_data
-        )
-
-        texts = response.text_annotations
+        extracted_text = extract_text_with_layout(content)
 
         # =========================
         # OCR 실패
         # =========================
 
-        if not texts:
+        if not extracted_text:
 
             return {
                 "success": False,
@@ -108,8 +99,6 @@ async def ocr_image(
         # =========================
         # OCR 원문
         # =========================
-
-        extracted_text = texts[0].description
 
         print()
         print("========== OCR TEXT ==========")

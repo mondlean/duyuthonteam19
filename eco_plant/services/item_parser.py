@@ -1,55 +1,13 @@
 import re
-
 from services.receipt_type_detector import detect_receipt_type
 
-
-# =========================
-# 제외 키워드
-# =========================
-
 EXCLUDE_WORDS = {
-
-    "합계",
-    "부가세",
-    "카드",
-    "승인번호",
-    "와이파이",
-    "쿠폰",
-    "결제",
-    "할인",
-    "포인트",
-    "잔액",
-    "번호",
-    "SSID",
-    "과세",
-    "면세",
-    "상품명",
-    "단가",
-    "수량",
-    "금액",
-    "POS",
-    "TEL",
-    "현금영수증",
-    "카드잔액",
-    "승인금액",
-    "교환",
-    "환불",
-    "매장",
-    "대표",
-    "사업자",
-    "주문번호",
-    "서울시",
-    "영등포구",
-    "대표",
-    "IFC",
-    "와이파이",
-    "사용안내",
-    "가입",
-    "승인정보",
-    "이벤트",
-    "쿠폰번호",
-    "APP",
-    "로그인"
+    "합계", "부가세", "카드", "승인번호", "와이파이", "쿠폰", "결제", "할인", "포인트", "잔액", "번호",
+    "SSID", "과세", "면세", "상품명", "단가", "수량", "금액", "POS", "TEL", "현금영수증", "카드잔액",
+    "승인금액", "교환", "환불", "매장", "대표", "사업자", "주문번호", "서울시", "영등포구", "IFC", 
+    "사용안내", "가입", "승인정보", "이벤트", "쿠폰번호", "APP", "로그인", "총구매액", "총금액", 
+    "면세물품", "과세물품", "받을금액", "거스름돈", "구매", "판매", "전화", "주소", "총", "물품", "가액",
+    "공급가액", "매출", "현금", "거스름", "NAR", "ORUC", "VAT"
 }
 
 
@@ -58,473 +16,179 @@ EXCLUDE_WORDS = {
 # =========================
 
 def parse_items(text):
-
     receipt_type = detect_receipt_type(text)
-
     print(f"[RECEIPT TYPE] {receipt_type}")
-
-    parsers = {
-
-        "CONVENIENCE": parse_convenience,
-
-        "CAFE": parse_cafe,
-
-        "MARKET": parse_market,
-
-        "RESTAURANT": parse_restaurant
-    }
-
-    parser = parsers.get(receipt_type)
-
-    if not parser:
-        return [], 0
-
-    return parser(text)
+    items, total_price = parse_general(text)
+    return items, total_price
 
 
 # =========================
-# 편의점
+# 범용 파서 (모든 타입 대응 시도)
 # =========================
 
-def parse_convenience(text):
-
+def parse_general(text):
     lines = split_lines(text)
-
     items = []
 
-    for i in range(len(lines) - 2):
+    for i, line in enumerate(lines):
+        if is_date_or_time(line): continue
+        tokens = line.split()
+        if not tokens: continue
 
-        name = lines[i]
-
-        quantity = lines[i + 1]
-
-        price = lines[i + 2]
-
-        if not quantity.isdigit():
-            continue
-
-        if not is_price(price):
-            continue
-
-        if not is_valid_name(name):
-            continue
-
-        items.append({
-            "name": clean_name(name),
-            "price": normalize_price(price)
-        })
-
-    total_price = extract_total_price(lines)
-
-    return deduplicate(items), total_price
-
-
-# =========================
-# 카페
-# =========================
-
-def parse_cafe(text):
-
-    lines = split_lines(text)
-
-    items = []
-
-    used_names = set()
-
-    for i in range(len(lines)):
-
-        current = lines[i]
-
-        # =========================
-        # 가격 패턴 찾기
-        # =========================
-
-        if not is_price(current):
-            continue
-
-        price = normalize_price(current)
-
-        # 너무 작은 가격 제외
-        if price < 100:
-            continue
-
-        # =========================
-        # 위쪽에서 상품명 탐색
-        # =========================
-
-        name = None
-
-        for j in range(i - 1, max(i - 6, -1), -1):
-
-            candidate = lines[j]
-
-            if is_product_candidate(candidate):
-
-                # 수량/할인/금액 제외
-                if candidate in ["수량", "할인", "금액"]:
+        # 1. 단일 라인 패턴: [상품명] [기타숫자들...] [최종가격]
+        if len(tokens) >= 2:
+            last_token = tokens[-1]
+            if is_price(last_token):
+                price_val = normalize_price(last_token)
+                
+                # 상품명 후보 추출 (앞쪽 토큰들)
+                # 중간에 있는 숫자들은 수량이나 단가일 확률이 높으므로 무시
+                name_parts = []
+                for t in tokens[:-1]:
+                    if t.isdigit() or is_price(t): continue
+                    name_parts.append(t)
+                
+                name_cand = " ".join(name_parts).strip()
+                if is_valid_name(name_cand):
+                    items.append({"name": clean_name(name_cand), "price": price_val})
                     continue
 
-                name = candidate
-                break
+        # 2. 멀티라인 패턴 (현재 줄이 숫자/가격 뭉치이고, 위 줄이 이름인 경우)
+        # 예: "상품명\n1,000 1 1,000"
+        if all(re.match(r'^[\d,.\-]+$', t) for t in tokens) and i > 0:
+            # 마지막 숫자를 가격으로 채택
+            if is_price(tokens[-1]):
+                price_val = normalize_price(tokens[-1])
+                # 위로 2줄까지 이름 탐색
+                for offset in [1, 2]:
+                    if i - offset < 0: break
+                    prev_line = lines[i - offset]
+                    if is_valid_name(prev_line) and not any(is_price(t) for t in prev_line.split()):
+                        items.append({"name": clean_name(prev_line), "price": price_val})
+                        break
 
-        if not name:
-            continue
-
-        cleaned = clean_name(name)
-
-        # 중복 제거
-        if cleaned in used_names:
-            continue
-
-        used_names.add(cleaned)
-
-        items.append({
-
-            "name": cleaned,
-
-            "price": price
-        })
-
-    total_price = extract_total_price(lines)
-
-    return deduplicate(items), total_price
+    items = deduplicate(items)
+    total_price = find_best_total_price(lines, items)
+    return items, total_price
 
 
 # =========================
-# 마트
-# =========================
-
-def parse_market(text):
-
-    lines = split_lines(text)
-
-    items = []
-
-    used_names = set()
-
-    for i in range(len(lines)):
-
-        line = lines[i]
-
-        # 단가 수량 금액 패턴
-        match = re.search(
-
-            r'(\d{1,3}([,.]\d{3})*)\s+\d+\s+(\d{1,3}([,.]\d{3})*)',
-
-            line
-        )
-
-        if not match:
-            continue
-
-        final_price = match.group(3)
-
-        name = find_product_name(lines, i)
-
-        if not name:
-            continue
-
-        cleaned = clean_name(name)
-
-        if cleaned in used_names:
-            continue
-
-        used_names.add(cleaned)
-
-        items.append({
-            "name": cleaned,
-            "price": normalize_price(final_price)
-        })
-
-    total_price = extract_total_price(lines)
-
-    return deduplicate(items), total_price
-
-
-# =========================
-# 음식점
-# =========================
-
-def parse_restaurant(text):
-
-    lines = split_lines(text)
-
-    items = []
-
-    for i in range(len(lines) - 3):
-
-        name = lines[i]
-
-        price = lines[i + 3]
-
-        if not is_price(price):
-            continue
-
-        if not is_valid_name(name):
-            continue
-
-        items.append({
-            "name": clean_name(name),
-            "price": normalize_price(price)
-        })
-
-    total_price = extract_total_price(lines)
-
-    return deduplicate(items), total_price
-
-
-# =========================
-# 상품명 탐색
-# =========================
-
-def find_product_name(lines, index):
-
-    for j in range(index - 1, max(index - 6, -1), -1):
-
-        candidate = lines[j]
-
-        if is_valid_name(candidate):
-            return candidate
-
-    return None
-
-
-# =========================
-# 총 금액 추출
-# =========================
-
-def extract_total_price(lines):
-
-    KEYWORDS = [
-
-        "결제대상금액",
-        "합계",
-        "총구매액",
-        "결제금액"
-    ]
-
-    for i in range(len(lines)):
-
-        line = lines[i]
-
-        if any(keyword in line for keyword in KEYWORDS):
-
-            # 현재 줄에서 가격 찾기
-            match = re.search(
-                r'(\d{1,3}([,.]\d{3})*)',
-                line
-            )
-
-            if match:
-                return normalize_price(match.group(1))
-
-            # 아래 줄 탐색
-            for j in range(i + 1, min(i + 4, len(lines))):
-
-                candidate = lines[j]
-
-                if is_price(candidate):
-                    return normalize_price(candidate)
-
-    return 0
-
-
-# =========================
-# 유효 상품명 검사
+# 유효성 검사 도구들
 # =========================
 
 def is_valid_name(name):
-
-    if len(name.strip()) < 2:
-        return False
-
-    if not re.search(r'[가-힣a-zA-Z]', name):
-        return False
-
-    if any(word in name for word in EXCLUDE_WORDS):
-        return False
-
+    if not name: return False
+    clean_n = name.replace(" ", "").upper()
+    if len(clean_n) < 2: return False
+    
+    # 제외 키워드 체크
+    for word in EXCLUDE_WORDS:
+        if word.upper() in clean_n: return False
+    
+    # 숫자로만 되어 있거나 특수문자만 있으면 제외
+    if clean_n.isdigit(): return False
+    if not re.search(r'[가-힣A-Z]', clean_n): return False
+    
+    # 너무 긴 이름은 무시
+    if len(name) > 40: return False
+    
     return True
-
-
-# =========================
-# 가격 판별
-# =========================
 
 def is_price(text):
+    if text.count('.') >= 2 or text.count('-') >= 2: return False
+    cleaned = text.replace(",", "").replace(".", "").replace("-", "").strip()
+    if not cleaned.isdigit(): return False
+    val = int(cleaned)
+    # 최소 100원 이상, 최대 100만원 이하 (현실적인 범위)
+    return 100 <= val <= 1000000
 
-    text = (
-        text
-        .replace(",", "")
-        .replace(".", "")
-        .strip()
-    )
-
-    if not text.isdigit():
-        return False
-
-    value = int(text)
-
-    # 너무 작은 숫자 제외
-    if value < 100:
-        return False
-
-    # 너무 큰 숫자 제외
-    if value > 1000000:
-        return False
-
-    return True
-
-
-# =========================
-# 가격 정규화
-# =========================
-
-def normalize_price(price_text):
-
-    cleaned = (
-        price_text
-        .replace(",", "")
-        .replace(".", "")
-        .strip()
-    )
-
+def normalize_price(text):
+    cleaned = text.replace(",", "").replace(".", "").replace("-", "").strip()
     return int(cleaned)
 
-
-# =========================
-# 이름 정리
-# =========================
+def is_date_or_time(text):
+    patterns = [r'\d{4}-\d{2}-\d{2}', r'\d{2}/\d{2}/\d{2}', r'\d{2}:\d{2}:\d{2}', r'\d{2}-\d{2}-\d{2}']
+    return any(re.search(p, text) for p in patterns)
 
 def clean_name(name):
-
-    name = re.sub(r'^\d+\.*', '', name)
-
-    name = re.sub(r'[\*\•\#\[\]\(\)]', '', name)
-
-    name = re.sub(r'\s+', ' ', name)
-
+    # 특수문자 및 불필요한 번호 정리
+    name = re.sub(r'^\d+[\.\s]*', '', name)
+    name = re.sub(r'[\*\•\#\[\]\(\)\:]', '', name)
     return name.strip()
 
 
 # =========================
-# 줄 정리
+# 총 금액 추출 (통합 개선형)
+# =========================
+
+def find_best_total_price(lines, items=None):
+    # 키워드 우선순위
+    PRIORITY_KEYWORDS = [
+        ["합계", "총계", "TOTAL", "받을금액", "결제금액", "총액"],
+        ["결제", "승인금액", "금액"]
+    ]
+    
+    item_sum = sum(item['price'] for item in items) if items else 0
+
+    # 1. 품목 합계와 일치하는 숫자 찾기 (가장 정확)
+    if item_sum > 0:
+        for line in reversed(lines):
+            if any(kw in line for kw in ["가액", "과세", "면세"]): continue
+            for m in re.findall(r'([\d,.]+)', line):
+                if is_price(m) and normalize_price(m) == item_sum:
+                    return item_sum
+
+    # 2. 우선순위 키워드별 탐색 (영수증 하단부터)
+    for kw_list in PRIORITY_KEYWORDS:
+        for i in range(len(lines) - 1, -1, -1):
+            line = lines[i]
+            if any(kw in line.replace(" ", "") for kw in kw_list):
+                if "가액" in line: continue
+                
+                # 같은 줄 혹은 다음 3줄 탐색
+                for j in range(i, min(i + 4, len(lines))):
+                    matches = re.findall(r'([\d,.]+)', lines[j])
+                    for m in reversed(matches):
+                        if is_price(m):
+                            val = normalize_price(m)
+                            if 2024 <= val <= 2030: continue
+                            # 품목 합계가 있다면 너무 차이나는 값(50% 미만 등)은 지양
+                            if item_sum > 0 and val < item_sum * 0.7: continue
+                            return val
+
+    # 3. 마지막 수단: 가장 큰 현실적 숫자 또는 품목 합계
+    all_prices = []
+    for line in lines:
+        if is_date_or_time(line): continue
+        if any(kw in line for kw in ["가액", "과세", "면세"]): continue
+        for m in re.findall(r'([\d,.]+)', line):
+            if is_price(m):
+                val = normalize_price(m)
+                if not (2024 <= val <= 2030): all_prices.append(val)
+    
+    if all_prices:
+        valid = [p for p in all_prices if 100 <= p <= 1000000]
+        if valid:
+            max_p = max(valid)
+            # 만약 품목 합계가 0보다 크면, 둘 중 큰 값을 선호
+            return max(max_p, item_sum)
+            
+    return item_sum
+
+
+# =========================
+# 유틸리티
 # =========================
 
 def split_lines(text):
-
-    return [
-
-        line.strip()
-
-        for line in text.split("\n")
-
-        if line.strip()
-    ]
-
-
-# =========================
-# 중복 제거
-# =========================
+    return [l.strip() for l in text.split("\n") if l.strip()]
 
 def deduplicate(items):
-
     seen = set()
-
     result = []
-
     for item in items:
-
-        key = (
-            item["name"],
-            item["price"]
-        )
-
-        if key in seen:
-            continue
-
-        seen.add(key)
-
-        result.append(item)
-
+        key = (item["name"], item["price"])
+        if key not in seen:
+            seen.add(key)
+            result.append(item)
     return result
-
-def is_product_candidate(text):
-
-    text = text.strip()
-
-    # 길이 제한
-    if len(text) < 2:
-        return False
-
-    # 숫자 비율 너무 높으면 제외
-    digit_ratio = (
-        sum(c.isdigit() for c in text)
-        / len(text)
-    )
-
-    if digit_ratio > 0.4:
-        return False
-
-    # 한글/영문 포함 여부
-    if not re.search(r'[가-힣a-zA-Z]', text):
-        return False
-
-    # 주소 패턴 제외
-    ADDRESS_KEYWORDS = [
-        "로",
-        "길",
-        "동",
-        "시",
-        "구"
-    ]
-
-    # 제외 패턴
-    INVALID_PATTERNS = [
-
-        "주문번호",
-        "대표",
-        "사용안내",
-        "와이파이",
-        "이벤트",
-        "쿠폰",
-        "로그인",
-        "APP",
-        "승인",
-        "카드",
-        "영수증",
-        "부가세",
-        "합계",
-        "결제금액",
-        "서울시",
-        "영등포구",
-        "IFC",
-        "KIOSK",
-        "Wi-Fi",
-        "www",
-        "http"
-    ]
-
-    if any(pattern in text for pattern in INVALID_PATTERNS):
-        return False
-
-    # 전화번호 제외
-    if re.search(r'\d{2,4}-\d{3,4}', text):
-        return False
-
-    if any(keyword in text for keyword in ADDRESS_KEYWORDS):
-
-        # 근데 상품명에도 들어갈 수 있으니
-        # 너무 짧을 때만 제외
-        if len(text) > 10:
-            return False
-
-    # 상품명은 보통 문자 포함
-    if not re.search(r'[가-힣a-zA-Z]', text):
-        return False
-
-    # 전화번호 패턴 제외
-    if re.search(r'\d{2,4}-\d{3,4}', text):
-        return False
-
-    return True

@@ -34,7 +34,7 @@ public class UserService {
     }
 
     public String login(String loginId, String password) {
-        User user = userRepository.findById(loginId)
+        User user = userRepository.findByLoginId(loginId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 아이디입니다."));
 
         if (!user.getPassword().equals(password)) {
@@ -43,4 +43,16 @@ public class UserService {
 
         return "로그인에 성공하였습니다!";
     }
-}
+
+    public User getUser(String loginId) {
+        return userRepository.findByLoginId(loginId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+    }
+
+    public void updatePlant(String loginId, String plant) {
+        User user = getUser(loginId);
+        user.setPlant(plant);
+        userRepository.save(user);
+    }
+    }
+

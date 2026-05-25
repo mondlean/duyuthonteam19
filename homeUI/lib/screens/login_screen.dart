@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import '../utils/globals.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_symbols_icons/symbols.dart';
@@ -88,7 +91,63 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     const SizedBox(height: 24),
                     FilledButton(
-                      onPressed: () => context.go('/home'),
+                      onPressed: () async {
+                        try {
+                          final response = await http.post(
+                            Uri.parse('${Globals.springBaseUrl}/users/login'),
+                            headers: {'Content-Type': 'application/json'},
+                            body: jsonEncode({
+                              'loginId': _idCtrl.text,
+                              'password': _pwCtrl.text,
+                            }),
+                          );
+                          if (response.statusCode == 200) {
+                            final body = response.body;
+                            if (body.contains('성공')) {
+                              Globals.loginId = _idCtrl.text;
+                              
+                              // 추가: 유저 정보를 조회하여 식물 선택 여부 확인
+                              final userRes = await http.get(
+                                Uri.parse('${Globals.springBaseUrl}/users/${Globals.loginId}'),
+                              );
+                              
+                              if (userRes.statusCode == 200) {
+                                final userData = jsonDecode(userRes.body);
+                                final String plant = userData['plant'] ?? '새싹';
+                                
+                                if (context.mounted) {
+                                  // 식물이 초기값 '새싹'이거나 비어있으면 선택 화면으로, 아니면 홈으로
+                                  if (plant == '새싹' || plant.isEmpty) {
+                                    context.go('/plant-selection');
+                                  } else {
+                                    context.go('/home');
+                                  }
+                                }
+                              } else {
+                                if (context.mounted) context.go('/home');
+                              }
+                            } else {
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text(body)),
+                                );
+                              }
+                            }
+                          } else {
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('로그인 실패: ${response.statusCode}')),
+                              );
+                            }
+                          }
+                        } catch (e) {
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('서버 연결 오류: $e')),
+                            );
+                          }
+                        }
+                      },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
