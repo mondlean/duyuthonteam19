@@ -16,8 +16,14 @@ class RewardsScreen extends StatefulWidget {
 }
 
 class _RewardsScreenState extends State<RewardsScreen> {
+  String _selectedRegion = '서울시 강남구'; 
+  bool _isNotificationOn = true;
   String _viewMode = 'home'; // 'home' 또는 'tier'
-  String _subViewMode = 'national'; // 'national' 또는 'regional' (티어 상세 내 서브 탭)
+  String _subViewMode = 'national'; // 'national' 또는 'regional'
+
+  // 실시간 정보 수정 및 변경 사항 반영을 위한 유저 정보 상태 변수
+  String _userName = '두유톤'; 
+  final String _userTier = '그린 마스터 티어';
 
   void _changeViewMode(String mode) {
     setState(() {
@@ -31,15 +37,398 @@ class _RewardsScreenState extends State<RewardsScreen> {
     });
   }
 
-  // 🆕 실시간 지우기 및 풍성한 알림 요소가 적용된 알림 바텀 시트 함수
+  // 🔴 [구조 변경] 관심 지역 선택 바텀 시트 (이제 프로필 시트 위로 겹쳐서 자연스럽게 띄웁니다)
+  void _showRegionPickerSheet(BuildContext context) {
+  // 1. 전국 시/도 및 시/군/구 데이터 정의
+  final Map<String, List<String>> regionData = {
+    "서울특별시": ["강남구", "강동구", "강북구", "강서구", "관악구", "광진구", "구로구", "금천구", "노원구", "도봉구", "동대문구", "동작구", "마포구", "서대문구", "서초구", "성동구", "성북구", "송파구", "양천구", "영등포구", "용산구", "은평구", "종로구", "중구", "중랑구"],
+    "부산광역시": ["강서구", "금정구", "기장군", "남구", "동구", "동래구", "부산진구", "북구", "사상구", "사하구", "서구", "수영구", "연제구", "영도구", "중구", "해운대구"],
+    "대구광역시": ["군위군", "남구", "달서구", "달성군", "동구", "북구", "서구", "수성구", "중구"],
+    "인천광역시": ["강화군", "계양구", "남동구", "동구", "미추홀구", "부평구", "서구", "연수구", "옹진군", "중구"],
+    "광주광역시": ["광산구", "남구", "동구", "북구", "서구"],
+    "대전광역시": ["대덕구", "동구", "서구", "유성구", "중구"],
+    "울산광역시": ["남구", "동구", "북구", "울주군", "중구"],
+    "세종특별자치시": ["세종시"],
+    "경기도": ["가평군", "고양시 덕양구", "고양시 일산동구", "고양시 일산서구", "과천시", "광명시", "광주시", "구리시", "군포시", "김포시", "남양주시", "동두천시", "부천시 원미구", "부천시 소사구", "부천시 오정구", "성남시 분당구", "성남시 수정구", "성남시 중원구", "수원시 권선구", "수원시 영통구", "수원시 장안구", "수원시 팔달구", "시흥시", "안산시 단원구", "안산시 상록구", "안성시", "안양시 동안구", "안양시 만안구", "양주시", "양평군", "여주시", "연천군", "오산시", "용인시 기흥구", "용인시 수지구", "용인시 처인구", "의왕시", "의정부시", "이천시", "파주시", "평택시", "포천시", "하남시", "화성시"],
+    "강원특별자치도": ["강릉시", "고성군", "동해시", "삼척시", "속초시", "양구군", "양양군", "영월군", "원주시", "인제군", "정선군", "철원군", "춘천시", "태백시", "평창군", "홍천군", "화천군", "횡성군"],
+    "충청북도": ["괴산군", "단양군", "보은군", "영동군", "옥천군", "음성군", "제천시", "증평군", "진천군", "청주시 상당구", "청주시 서원구", "청주시 청원구", "청주시 흥덕구", "충주시"],
+    "충청남도": ["계룡시", "공주시", "금산군", "논산시", "당진시", "보령시", "부여군", "서산시", "서천군", "아산시", "예산군", "천안시 동남구", "천안시 서북구", "청양군", "태안군", "홍성군"],
+    "전북특별자치도": ["고창군", "군산시", "김제시", "남원시", "무주군", "부안군", "순창군", "완주군", "익산시", "임실군", "장수군", "전주시 덕진구", "전주시 완산구", "정읍시", "진안군"],
+    "전라남도": ["강진군", "고흥군", "곡성군", "광양시", "구례군", "나주시", "담양군", "목포시", "무안군", "보성군", "순천시", "신안군", "여수시", "영광군", "영암군", "완도군", "장성군", "장흥군", "진도군", "함평군", "해남군", "화순군"],
+    "경상북도": ["경산시", "경주시", "고령군", "구미시", "김천시", "문경시", "봉화군", "상주시", "성주군", "안동시", "영덕군", "영양군", "영주시", "영천시", "예천군", "울릉군", "울진군", "의성군", "청도군", "청송군", "칠곡군", "포항시 남구", "포항시 북구"],
+    "경상남도": ["거제시", "거창군", "고성군", "김해시", "남해군", "밀양시", "사천시", "산청군", "양산시", "의령군", "진주시", "창녕군", "창원시 마산합포구", "창원시 마산회원구", "창원시 성산구", "창원시 의창구", "창원시 진해구", "통영시", "하동군", "함안군", "함양군", "합천군"],
+    "제주특별자치도": ["서귀포시", "제주시"]
+  };
+
+  // 시/도 Key 배열 추출
+  final List<String> sidos = regionData.keys.toList();
+
+  // 바텀시트 내부에서 실시간으로 스크롤 상태를 바꾸기 위해 StatefulBuilder 사용
+  showModalBottomSheet(
+    context: context,
+    backgroundColor: Colors.transparent,
+    isScrollControlled: true, // 내부 Expanded 레이아웃이 정상 작동하기 위해 필수
+    builder: (context) {
+      // 초기 내부 선택 상태 변수 (현재 메인 화면에서 고른 값이 있으면 파싱해서 초기값 매칭)
+      String tempSelectedSido = sidos.first;
+      if (_selectedRegion.isNotEmpty) {
+        for (var sido in sidos) {
+          if (_selectedRegion.startsWith(sido)) {
+            tempSelectedSido = sido;
+            break;
+          }
+        }
+      }
+
+      return StatefulBuilder(
+        builder: (BuildContext context, StateSetter setBottomSheetState) {
+          final List<String> guguns = regionData[tempSelectedSido] ?? [];
+
+          return GlassPanel(
+            opacity: 0.95,
+            blur: 25,
+            borderRadius: 32,
+            padding: const EdgeInsets.fromLTRB(24, 12, 24, 40),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // 바텀시트 상단 핸들 바
+                Container(
+                  width: 40,
+                  height: 4,
+                  margin: const EdgeInsets.only(bottom: 24),
+                  decoration: BoxDecoration(
+                    color: AppColors.onSurface.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+                Text(
+                  '관심 지역 설정',
+                  style: AppTextStyles.koBody(
+                    18,
+                    weight: FontWeight.w700,
+                    color: AppColors.onSurface,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                
+                // 좌우 독립 스크롤 구현을 위한 고정 높이 컨테이너 설정
+                ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxHeight: MediaQuery.of(context).size.height * 0.4, // 유연한 높이 제한 (최대 40%)
+                  ),
+                  child: Row(
+                    children: [
+                      // ➡️ 왼쪽: 시/도 리스트 스크롤 박스
+                      Expanded(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: AppColors.onSurface.withValues(alpha: 0.03),
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: sidos.length,
+                            itemBuilder: (context, index) {
+                              final sido = sidos[index];
+                              final isCurrentSido = (tempSelectedSido == sido);
+
+                              return ListTile(
+                                dense: true,
+                                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
+                                title: Text(
+                                  sido,
+                                  style: AppTextStyles.koBody(
+                                    14,
+                                    weight: isCurrentSido ? FontWeight.w700 : FontWeight.w500,
+                                    color: isCurrentSido ? AppColors.primary : AppColors.onSurface.withValues(alpha: 0.7),
+                                  ),
+                                ),
+                                tileColor: isCurrentSido ? AppColors.primary.withValues(alpha: 0.08) : Colors.transparent,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                onTap: () {
+                                  // 바텀시트 내부의 상태만 업데이트하여 구 목록을 변경
+                                  setBottomSheetState(() {
+                                    tempSelectedSido = sido;
+                                  });
+                                },
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      
+                      // ➡️ 오른쪽: 시/군/구 리스트 스크롤 박스
+                      Expanded(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: AppColors.onSurface.withValues(alpha: 0.03),
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: guguns.length,
+                            itemBuilder: (context, index) {
+                              final gugun = guguns[index];
+                              final fullPathName = "$tempSelectedSido $gugun";
+                              final isCurrentGugun = (_selectedRegion == fullPathName);
+
+                              return ListTile(
+                                dense: true,
+                                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
+                                title: Text(
+                                  gugun,
+                                  style: AppTextStyles.koBody(
+                                    14,
+                                    weight: isCurrentGugun ? FontWeight.w700 : FontWeight.w500,
+                                    color: isCurrentGugun ? AppColors.primary : AppColors.onSurface,
+                                  ),
+                                ),
+                                trailing: isCurrentGugun 
+                                    ? const Icon(Symbols.check, color: AppColors.primary, size: 18) 
+                                    : null,
+                                onTap: () {
+                                  // 구까지 최종 선택 완료 시 부모 UI 상태(setState)를 업데이트하고 시트 이탈
+                                  setState(() {
+                                    _selectedRegion = fullPathName;
+                                  });
+                                  Navigator.pop(context);
+                                },
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      );
+    },
+  );
+}
+
+  // 🔄 [핵심 수정] 프로필 아바타 클릭 시 모든 설정(지역, 알림, 버전)이 포함되어 나오는 통합 바텀 시트
+  void _showProfileEditSheet(BuildContext context) {
+    final TextEditingController nameController = TextEditingController(text: _userName);
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        // 내부 스위치 및 지역 텍스트 실시간 반영을 위해 StatefulBuilder 사용
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setModalState) {
+            return Padding(
+              padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+              child: GlassPanel(
+                opacity: 0.9,
+                blur: 25,
+                borderRadius: 32,
+                padding: const EdgeInsets.fromLTRB(24, 12, 24, 40),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // 상단 드래그 핸들러
+                    Container(
+                      width: 40,
+                      height: 4,
+                      margin: const EdgeInsets.only(bottom: 24),
+                      decoration: BoxDecoration(
+                        color: AppColors.onSurface.withValues(alpha: 0.2),
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                    Text(
+                      '내 정보 및 설정',
+                      style: AppTextStyles.koBody(
+                        18,
+                        weight: FontWeight.w700,
+                        color: AppColors.onSurface,
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    
+                    // 📸 프로필 이미지 영역
+                    Stack(
+                      children: [
+                        Container(
+                          width: 80,
+                          height: 80,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: AppColors.primaryContainer.withValues(alpha: 0.3),
+                            border: Border.all(color: AppColors.primary.withValues(alpha: 0.4), width: 2),
+                          ),
+                          alignment: Alignment.center,
+                          child: const Icon(Symbols.person, color: AppColors.primary, size: 40),
+                        ),
+                        Positioned(
+                          right: 0,
+                          bottom: 0,
+                          child: GestureDetector(
+                            onTap: () {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('갤러리 접근 권한을 요청합니다. (더미)')),
+                              );
+                            },
+                            child: Container(
+                              width: 26,
+                              height: 26,
+                              decoration: const BoxDecoration(color: AppColors.primary, shape: BoxShape.circle),
+                              alignment: Alignment.center,
+                              child: const Icon(Symbols.photo_camera, color: Colors.white, size: 14),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 24),
+                    
+                    // 📝 닉네임 입력란
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        '닉네임 / 이름',
+                        style: AppTextStyles.koBody(13, weight: FontWeight.w600, color: AppColors.onSurfaceVariant),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    TextField(
+                      controller: nameController,
+                      style: AppTextStyles.koBody(15, color: AppColors.onSurface, weight: FontWeight.w500),
+                      cursorColor: AppColors.primary,
+                      decoration: InputDecoration(
+                        hintText: '이름을 입력해주세요',
+                        hintStyle: AppTextStyles.koBody(15, color: AppColors.onSurfaceVariant.withValues(alpha: 0.5)),
+                        filled: true,
+                        fillColor: AppColors.onSurface.withValues(alpha: 0.05),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(color: AppColors.outline.withValues(alpha: 0.1)),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    
+                    // 📍 관심 지역 설정 통합
+                    Container(
+                      decoration: BoxDecoration(
+                        color: AppColors.onSurface.withValues(alpha: 0.03),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Column(
+                        children: [
+                          ListTile(
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+                            leading: const Icon(Symbols.location_on, color: AppColors.primary),
+                            title: Text('나의 지역 설정', style: AppTextStyles.koBody(14, weight: FontWeight.w600, color: AppColors.onSurface)),
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(_selectedRegion, style: AppTextStyles.koBody(13, color: AppColors.onSurfaceVariant)),
+                                const SizedBox(width: 6),
+                                const Icon(Symbols.arrow_forward_ios, size: 12, color: AppColors.onSurfaceVariant),
+                              ],
+                            ),
+                            onTap: () {
+                              // 지역 선택 창을 열고, 닫혔을 때 바텀시트 내부 텍스트와 부모 상태를 동시 갱신
+                              _showRegionPickerSheet(context);
+                              Future.delayed(const Duration(milliseconds: 300), () {
+                                setModalState(() {});
+                              });
+                            },
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: Divider(height: 1, thickness: 1, color: AppColors.outline.withValues(alpha: 0.05)),
+                          ),
+                          // 🔔 알림 설정 통합
+                          SwitchListTile(
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+                            secondary: const Icon(Symbols.notifications_active, color: AppColors.primary),
+                            title: Text('실시간 푸시 알림', style: AppTextStyles.koBody(14, weight: FontWeight.w600, color: AppColors.onSurface)),
+                            value: _isNotificationOn,
+                            activeColor: AppColors.primary,
+                            onChanged: (bool value) {
+                              // 모달 내부 상태와 부모 위젯 상태를 동시에 동기화
+                              setModalState(() {
+                                _isNotificationOn = value;
+                              });
+                              setState(() {
+                                _isNotificationOn = value;
+                              });
+                            },
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: Divider(height: 1, thickness: 1, color: AppColors.outline.withValues(alpha: 0.05)),
+                          ),
+                          // ℹ️ 앱 버전 정보 통합
+                          ListTile(
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+                            leading: const Icon(Symbols.info, color: AppColors.onSurfaceVariant),
+                            title: Text('현재 앱 버전', style: AppTextStyles.koBody(14, weight: FontWeight.w600, color: AppColors.onSurface)),
+                            trailing: Text(
+                              'v1.0.4',
+                              style: AppTextStyles.koBody(13, weight: FontWeight.w600, color: AppColors.onSurfaceVariant),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 28),
+                    
+                    // 💾 변경사항 저장 버튼
+                    FilledButton(
+                      style: FilledButton.styleFrom(
+                        backgroundColor: AppColors.primary,
+                        minimumSize: const Size.fromHeight(50),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                      ),
+                      onPressed: () {
+                        if (nameController.text.trim().isNotEmpty) {
+                          setState(() {
+                            _userName = nameController.text.trim();
+                          });
+                          Navigator.pop(context);
+                        }
+                      },
+                      child: Text(
+                        '변경사항 저장',
+                        style: AppTextStyles.koBody(15, weight: FontWeight.w700, color: Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  // 알림 바텀 시트 함수
   void _showNotificationsSheet(BuildContext context) {
-    // 시트가 열릴 때 원본 불변 데이터를 변경 가능한 가변 리스트로 복사해옵니다.
     final List<_NotificationEntry> currentNotifications = List.from(_initialNotifications);
 
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent, // 유리 효과 극대화를 위해 배경 투명 처리
+      backgroundColor: Colors.transparent, 
       builder: (context) {
         return StatefulBuilder(
           builder: (context, setModalState) {
@@ -49,10 +438,9 @@ class _RewardsScreenState extends State<RewardsScreen> {
               borderRadius: 32,
               padding: const EdgeInsets.fromLTRB(24, 12, 24, 40),
               child: SizedBox(
-                height: MediaQuery.of(context).size.height * 0.75, // 화면 높이의 75% 차지
+                height: MediaQuery.of(context).size.height * 0.75, 
                 child: Column(
                   children: [
-                    // 상단 핸들 바 (쓸어내리기 유도 디자인)
                     Container(
                       width: 40,
                       height: 4,
@@ -62,11 +450,10 @@ class _RewardsScreenState extends State<RewardsScreen> {
                         borderRadius: BorderRadius.circular(2),
                       ),
                     ),
-                    // 타이틀 및 지우기 버튼
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const SizedBox(width: 56), // 우측 지우기 버튼과의 대칭을 위한 여백
+                        const SizedBox(width: 56), 
                         Text(
                           '알림',
                           style: AppTextStyles.koBody(
@@ -75,7 +462,6 @@ class _RewardsScreenState extends State<RewardsScreen> {
                             color: AppColors.onSurface,
                           ),
                         ),
-                        // ⚡ 클릭 시 전체 지우기 기능 작동
                         GestureDetector(
                           onTap: () {
                             if (currentNotifications.isNotEmpty) {
@@ -93,7 +479,7 @@ class _RewardsScreenState extends State<RewardsScreen> {
                                 weight: FontWeight.w700,
                                 color: currentNotifications.isEmpty 
                                     ? AppColors.onSurfaceVariant.withValues(alpha: 0.3)
-                                    : Colors.red.shade400, // 데이터가 있을 때만 붉은색 활성화
+                                    : Colors.red.shade400, 
                               ),
                             ),
                           ),
@@ -101,8 +487,6 @@ class _RewardsScreenState extends State<RewardsScreen> {
                       ],
                     ),
                     const SizedBox(height: 20),
-                    
-                    // 알림 목록 리스트 영역
                     Expanded(
                       child: currentNotifications.isEmpty
                           ? Center(
@@ -140,7 +524,6 @@ class _RewardsScreenState extends State<RewardsScreen> {
                                   child: Row(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      // 알림 성격별 아이콘 컨테이너
                                       Container(
                                         width: 40,
                                         height: 40,
@@ -152,7 +535,6 @@ class _RewardsScreenState extends State<RewardsScreen> {
                                         child: Icon(item.icon, color: item.iconColor, size: 20),
                                       ),
                                       const SizedBox(width: 14),
-                                      // 알림 텍스트 세부 영역
                                       Expanded(
                                         child: Column(
                                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -219,10 +601,13 @@ class _RewardsScreenState extends State<RewardsScreen> {
       extendBodyBehindAppBar: true,
       backgroundColor: AppColors.background,
       appBar: LuminaAppBar(
-        leading: const _AvatarLeading(),
+        leading: GestureDetector(
+          onTap: () => _showProfileEditSheet(context),
+          child: const _AvatarLeading(),
+        ),
         trailing: IconButton(
           icon: const Icon(Symbols.notifications, color: AppColors.primary),
-          onPressed: () => _showNotificationsSheet(context), // 알림 바텀 시트 트리거 연동
+          onPressed: () => _showNotificationsSheet(context), 
         ),
       ),
       body: BirchBackground(
@@ -266,7 +651,7 @@ class _RewardsScreenState extends State<RewardsScreen> {
                   const SizedBox(height: 12),
                 ],
               ] else ...[
-                const _MyRankingCard(),
+                _MyRankingCard(name: _userName, tier: _userTier),
                 const SizedBox(height: 16),
                 
                 _SubTabBar(
@@ -275,8 +660,13 @@ class _RewardsScreenState extends State<RewardsScreen> {
                 ),
                 const SizedBox(height: 16),
                 
-                _LeaderboardCard(isNational: _subViewMode == 'national'),
+                _LeaderboardCard(
+                  isNational: _subViewMode == 'national',
+                  myName: _userName,
+                  myTier: _userTier,
+                ),
               ],
+              // 🔴 불필요한 하단 설정 카드는 완벽히 제거되었습니다.
             ],
           ),
         ),
@@ -458,7 +848,13 @@ class _BalanceCard extends StatelessWidget {
 }
 
 class _MyRankingCard extends StatelessWidget {
-  const _MyRankingCard();
+  const _MyRankingCard({
+    required this.name,
+    required this.tier,
+  });
+
+  final String name;
+  final String tier;
 
   @override
   Widget build(BuildContext context) {
@@ -486,7 +882,7 @@ class _MyRankingCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                '내 순위',
+                '$name 님의 순위',
                 style: AppTextStyles.labelMd.copyWith(
                   color: Colors.white.withValues(alpha: 0.6),
                   letterSpacing: 1.5,
@@ -537,7 +933,7 @@ class _MyRankingCard extends StatelessWidget {
                     const Icon(Symbols.workspace_premium, color: Colors.white, size: 14),
                     const SizedBox(width: 4),
                     Text(
-                      '그린 마스터 티어',
+                      tier,
                       style: AppTextStyles.labelMd.copyWith(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -652,8 +1048,15 @@ class _SubTabBar extends StatelessWidget {
 }
 
 class _LeaderboardCard extends StatelessWidget {
+  const _LeaderboardCard({
+    required this.isNational,
+    required this.myName,
+    required this.myTier,
+  });
+
   final bool isNational;
-  const _LeaderboardCard({required this.isNational});
+  final String myName;
+  final String myTier;
 
   @override
   Widget build(BuildContext context) {
@@ -661,7 +1064,7 @@ class _LeaderboardCard extends StatelessWidget {
       const _LeaderboardEntry(rank: 1, name: '김지우', tier: '그랜드 마스터', points: '50,420 P'),
       const _LeaderboardEntry(rank: 2, name: '이민재', tier: '그랜드 마스터', points: '50,400 P'),
       const _LeaderboardEntry(rank: 3, name: '박서연', tier: '그린 마스터', points: '50,280 P'),
-      const _LeaderboardEntry(rank: 331, name: '나', tier: '그린 마스터', points: '20,250 P', isMe: true),
+      _LeaderboardEntry(rank: 331, name: myName, tier: myTier, points: '20,250 P', isMe: true),
       const _LeaderboardEntry(rank: 332, name: '최윤서', tier: '그린 마스터', points: '20,240 P'),
     ];
 
@@ -1020,11 +1423,6 @@ const _activities = <_ActivityEntry>[
   ),
 ];
 
-
-// ==========================================
-// 🆕 확장 및 구조 개선된 가상의 알림 데이터 영역
-// ==========================================
-
 class _NotificationEntry {
   final IconData icon;
   final Color iconColor;
@@ -1047,7 +1445,6 @@ class _NotificationEntry {
   });
 }
 
-// 총 7개의 다채로운 일상 알림 더미 데이터 세트
 const _initialNotifications = <_NotificationEntry>[
   _NotificationEntry(
     icon: Symbols.water_drop,
