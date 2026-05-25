@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>초록수증 Nature - Onboarding</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-fixed": "#002116",
+                        "primary-fixed": "#60fcc6",
+                        "tertiary-fixed": "#ffdbce",
+                        "surface-container-highest": "#e2e2e5",
+                        "outline-variant": "#bbcac1",
+                        "surface-dim": "#dadadc",
+                        "tertiary-fixed-dim": "#ffb598",
+                        "on-secondary-container": "#2e6d5f",
+                        "surface-container-high": "#e8e8ea",
+                        "surface-container-lowest": "#ffffff",
+                        "primary": "#006c4f",
+                        "secondary-fixed-dim": "#94d3c1",
+                        "tertiary": "#9a451f",
+                        "on-error-container": "#93000a",
+                        "inverse-primary": "#3adfab",
+                        "surface-variant": "#e2e2e5",
+                        "on-primary": "#ffffff",
+                        "background": "#f9f9fc",
+                        "on-primary-fixed-variant": "#00513b",
+                        "on-surface": "#1a1c1e",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-fixed-variant": "#065043",
+                        "on-error": "#ffffff",
+                        "surface": "#f9f9fc",
+                        "secondary": "#29695b",
+                        "on-tertiary-fixed": "#370e00",
+                        "on-background": "#1a1c1e",
+                        "surface-container-low": "#f3f3f6",
+                        "surface-container": "#eeeef0",
+                        "on-primary-container": "#004d38",
+                        "secondary-container": "#acedda",
+                        "error": "#ba1a1a",
+                        "tertiary-container": "#ff9467",
+                        "on-tertiary-fixed-variant": "#7b2f09",
+                        "primary-container": "#00c896",
+                        "on-secondary-fixed": "#00201a",
+                        "outline": "#6c7a72",
+                        "on-tertiary-container": "#762b05",
+                        "on-surface-variant": "#3c4a43",
+                        "inverse-surface": "#2f3133",
+                        "error-container": "#ffdad6",
+                        "surface-bright": "#f9f9fc",
+                        "inverse-on-surface": "#f0f0f3",
+                        "primary-fixed-dim": "#3adfab",
+                        "on-secondary": "#ffffff",
+                        "surface-tint": "#006c4f",
+                        "secondary-fixed": "#afefdd"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-mobile": "20px",
+                        "gutter": "16px",
+                        "base": "8px",
+                        "radius-outer": "24px",
+                        "radius-inner": "12px"
+                    },
+                    "fontFamily": {
+                        "title-md": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "label-md": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "headline-lg-mobile": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "body-sm": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                        "display-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background-image: url('https://lh3.googleusercontent.com/aida/ADBb0uiVLctp3oXgk2q6cq2OQHiq3TwbchvRnXLsnVHhqpOBLieDWc6zKiUcXhPOGRYlvlngSKJuFigXCd-FmbH4efBhHrSFwToi3Rh1betiZpQQrRrnDSfEtPRSSZp4yiHuumrtgu0X6OP5l7C6O5rP8eTFHG68YOV0bGzBEPnr421kAgbF6tqWH3WD5LPFs-u8x7AxnX_jJX42NAn1G-2VLBMqD8rbV4mbsOoQuPEy_qUz3EPe8uzxmF0PIK1y');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .glass-panel {
+            background-color: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+        }
+
+        .floating-element {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .fade-in {
+            animation: fadeIn 1.2s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="font-body-lg text-on-surface">
+<!-- Top AppBar (Simplified for Onboarding) -->
+<header class="w-full top-0 sticky bg-white/40 backdrop-blur-[24px] border-b border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.08)] flex justify-between items-center px-margin-mobile py-base z-50">
+<div class="font-headline-lg-mobile text-headline-lg-mobile text-primary tracking-tight">
+            초록수증 Nature
+        </div>
+<button class="hover:bg-white/10 transition-colors p-2 rounded-full">
+<span class="material-symbols-outlined text-primary">eco</span>
+</button>
+</header>
+<main class="flex-1 flex flex-col items-center justify-center px-margin-mobile pb-24">
+<!-- Visual Content Area -->
+<div class="relative w-full flex-1 flex flex-col items-center justify-center max-h-[60vh]">
+<!-- Decorative Glow Background -->
+<div class="absolute w-[280px] h-[280px] bg-primary/10 rounded-full blur-[80px]"></div>
+<!-- Central Visual (Low-poly flower) -->
+<div class="relative z-10 floating-element max-w-[280px] w-full">
+<img alt="A beautiful low-poly digital sculpture of a flower" class="w-full h-auto drop-shadow-2xl" src="https://lh3.googleusercontent.com/aida/ADBb0ugfklA41Nq8Ax1y2lZOWXO48vZ5Z-yconfHy_fcyc-fqSJAb62fug968w0S6a2ztEMCTDxpR5bv2GAZQCoYE4v5N5KSo9ro3lKIysOPe7kWEci5OFFw2-OcB6X85hGUFq0-QsHJB_nz6c2dlAY7blNn676KE9NrP4475d0AGzS8Ryr6-BeNCuADGCQNEzhIE35RycyKqFN7HxlB-1ICwCVf_SYHrK_wMCWjiIENdPeoIglDEej7vH32nZ5Q"/>
+</div>
+</div>
+<!-- Glassmorphism Card Content -->
+<div class="w-full max-w-md glass-panel rounded-radius-outer p-8 flex flex-col items-center gap-6 fade-in">
+<div class="text-center space-y-2">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">
+                    성장을 시작하세요
+                </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-[240px] mx-auto">
+                    친환경 소비로 당신만의 꽃을 피워보세요
+                </p>
+</div>
+<!-- Onboarding Step Indicator (Visual Detail) -->
+<div class="flex gap-2">
+<div class="w-8 h-1 rounded-full bg-primary-container"></div>
+<div class="w-2 h-1 rounded-full bg-white/30"></div>
+<div class="w-2 h-1 rounded-full bg-white/30"></div>
+</div>
+<!-- Start Button -->
+<button class="w-full py-4 bg-primary text-on-primary font-title-md text-title-md rounded-full shadow-lg active:scale-95 transition-all duration-200 flex items-center justify-center gap-2 group" onclick="handleStart()">
+                시작하기
+                <span class="material-symbols-outlined transition-transform group-hover:translate-x-1">arrow_forward</span>
+</button>
+<button class="text-on-surface-variant font-label-md text-label-md hover:text-primary transition-colors">
+                이미 계정이 있으신가요? <span class="font-bold underline decoration-primary/30">로그인</span>
+</button>
+</div>
+</main>
+<!-- Background Decorative Elements (Atmospheric) -->
+<div class="fixed bottom-[-10%] right-[-10%] w-[400px] h-[400px] bg-primary/5 rounded-full blur-[100px] pointer-events-none"></div>
+<div class="fixed top-[20%] left-[-5%] w-[300px] h-[300px] bg-secondary-container/10 rounded-full blur-[80px] pointer-events-none"></div>
+<script>
+        function handleStart() {
+            const btn = event.currentTarget;
+            btn.innerHTML = `<span class="material-symbols-outlined animate-spin">refresh</span>`;
+            
+            // Interaction feedback
+            setTimeout(() => {
+                btn.style.backgroundColor = '#00c896';
+                btn.innerHTML = '준비 완료!';
+                
+                // Final transition effect
+                document.body.style.transition = 'opacity 0.8s ease-out';
+                document.body.style.opacity = '0';
+            }, 800);
+        }
+
+        // Parallax effect on mouse move for desktop (Subtle)
+        document.addEventListener('mousemove', (e) => {
+            if (window.innerWidth > 768) {
+                const moveX = (e.clientX - window.innerWidth / 2) / 50;
+                const moveY = (e.clientY - window.innerHeight / 2) / 50;
+                const flower = document.querySelector('.floating-element');
+                flower.style.transform = `translate(${moveX}px, ${moveY}px)`;
+            }
+        });
+    </script>
+</body></html>
