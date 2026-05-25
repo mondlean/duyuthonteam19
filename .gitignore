@@ -1,0 +1,48 @@
+# --- OS & IDE ---
+.DS_Store
+Thumbs.db
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.idea/
+*.iml
+
+# --- Flutter (homeUI) ---
+**/homeUI/.dart_tool/
+**/homeUI/.flutter-plugins
+**/homeUI/.flutter-plugins-dependencies
+**/homeUI/.pub-cache/
+**/homeUI/.packages
+**/homeUI/build/
+**/homeUI/node_modules/
+**/homeUI/yarn.lock
+**/homeUI/package-lock.json
+
+# --- Spring Boot (eco_spring_login, eco_spring_point) ---
+**/.gradle/
+**/build/
+!**/src/main/resources/application.properties
+**/bin/
+**/out/
+*.log
+*.db
+*.db-journal
+
+# --- Python (eco_plant) ---
+**/eco_plant/venv/
+**/eco_plant/.venv/
+**/eco_plant/__pycache__/
+**/eco_plant/*.py[cod]
+**/eco_plant/*$py.class
+**/eco_plant/.env
+**/eco_plant/vision-key.json
+
+# --- Secrets & Credentials ---
+*.keystore
+*.jks
+*.p12
+*.key
+*.pem
+.env*

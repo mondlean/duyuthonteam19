@@ -1,0 +1,36 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__stitch__list_projects",
+      "mcp__stitch__get_project",
+      "mcp__stitch__get_screen",
+      "mcp__stitch__list_design_systems",
+      "Bash(flutter --version)",
+      "Bash(curl -sL \"https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ8Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpbCiVodG1sX2YyMDRjM2JhNTU1YzRkMmZhY2ZmOWZmNTdjNDZkYjNkEgsSBxDBi5S49RkYAZIBJAoKcHJvamVjdF9pZBIWQhQxNTI5NTE4MzE0MDI4MzQ5NTMwMA&filename=&opi=89354086\" -o /tmp/main_screen.html)",
+      "Read(//tmp/**)",
+      "Bash(where flutter.bat)",
+      "Bash(where dart.bat)",
+      "Read(//c/flutter/**)",
+      "Read(//c/src/flutter/**)",
+      "Read(//c/dev/flutter/**)",
+      "Read(//c/Users/user/AppData/Local/flutter/**)",
+      "Read(//c/Users/user/flutter/**)",
+      "Read(//c/Users/user/fvm/default/**)",
+      "Bash(curl -sL \"https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ8Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpbCiVodG1sX2MxMDQ1ZWE4YzJmMzQxODk5NDlmMDE2MjEzZGUwNjllEgsSBxDBi5S49RkYAZIBJAoKcHJvamVjdF9pZBIWQhQxNTI5NTE4MzE0MDI4MzQ5NTMwMA&filename=&opi=89354086\" -o /tmp/main2_screen.html)",
+      "Bash(curl -sL \"https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ8Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpbCiVodG1sXzAwMDY1MjdkNWNiZGExODkwNTAzYzEwOTFmMzY1Njk5EgsSBxDBi5S49RkYAZIBJAoKcHJvamVjdF9pZBIWQhQxNTI5NTE4MzE0MDI4MzQ5NTMwMA&filename=&opi=89354086\" -o /tmp/main3_screen.html)",
+      "Bash(curl -sL \"https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ8Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpbCiVodG1sX2M3OWUzOTZiZDRlZTQ1YjJiNTI1ZGI3NWU2MDdjMTZkEgsSBxDBi5S49RkYAZIBJAoKcHJvamVjdF9pZBIWQhQxNTI5NTE4MzE0MDI4MzQ5NTMwMA&filename=&opi=89354086\" -o /tmp/onboarding.html)",
+      "Bash(curl -sL \"https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ8Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpbCiVodG1sXzk1YmM2NmMyMDBkMzRmMTZiYjc4ZTU3OTY0Zjc2MTJkEgsSBxDBi5S49RkYAZIBJAoKcHJvamVjdF9pZBIWQhQxNTI5NTE4MzE0MDI4MzQ5NTMwMA&filename=&opi=89354086\" -o /tmp/login.html)",
+      "Bash(curl -sL \"https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ8Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpbCiVodG1sXzk1MGFlNmUwNzFkMTQyMWZiZTI1NTVmYWVjMzA2MTczEgsSBxDBi5S49RkYAZIBJAoKcHJvamVjdF9pZBIWQhQxNTI5NTE4MzE0MDI4MzQ5NTMwMA&filename=&opi=89354086\" -o /tmp/signup.html)",
+      "Bash(where winget *)",
+      "Bash(where choco *)",
+      "Bash(where scoop *)",
+      "Bash(powershell.exe -NoProfile -Command \"Get-Command winget -ErrorAction SilentlyContinue | Select-Object Source\")",
+      "Bash(mkdir -p \"/e/programing/duyuthonteam19/.claude/stitch_html\")",
+      "Bash(cp /tmp/*.html \"/e/programing/duyuthonteam19/.claude/stitch_html/\")",
+      "Bash(winget install *)",
+      "Bash(where flutter *)",
+      "Bash(powershell.exe -NoProfile -Command \"& {refreshenv; flutter --version}\")",
+      "Read(//c/Users/user/AppData/Local/Programs/**)"
+    ]
+  }
+}

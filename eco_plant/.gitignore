@@ -1,0 +1,19 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+
+# Environment
+.env
+
+# Google Vision Key
+vision-key.json
+
+# SQLite
+*.db
+
+# VSCode
+.vscode/
+
+# Mac
+.DS_Store
