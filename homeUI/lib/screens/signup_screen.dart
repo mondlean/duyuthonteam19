@@ -158,12 +158,14 @@ class _SignupScreenState extends State<SignupScreen> {
                     ),
                     const SizedBox(height: 28),
                     FilledButton(
+ featnew
                       onPressed: () => context.go('/home'),
                       child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                         Text('가입하기', style: AppTextStyles.koBody(18, weight: FontWeight.w700, color: AppColors.onPrimaryContainer)),
                         const SizedBox(width: 6),
                         const Icon(Symbols.arrow_forward, size: 20),
                       ]),
+
                     ),
                   ],
                 ),

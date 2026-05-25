@@ -73,7 +73,7 @@ class OnboardingScreen extends StatelessWidget {
                           shadowColor:
                               AppColors.primaryContainer.withValues(alpha: 0.4),
                         ),
-                        onPressed: () => context.push('/signup'),//여기
+                        onPressed: () => context.push('/signup'),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [

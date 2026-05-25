@@ -191,7 +191,7 @@ _buildSheetSwitchTile(Symbols.celebration, '혜택 및 이벤트 앱 알림', ev
             child: Switch(
               value: value,
               onChanged: onChanged,
-              activeColor: AppColors.primary,
+              activeThumbColor: AppColors.primary,
               activeTrackColor: AppColors.primaryContainer.withValues(alpha: 0.3),
               inactiveThumbColor: Colors.white,
               inactiveTrackColor: Colors.grey.shade300,

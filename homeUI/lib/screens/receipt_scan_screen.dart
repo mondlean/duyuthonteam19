@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
+import '../utils/image_saver.dart';
+
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
 import '../widgets/birch_background.dart' show BirchBackground;
@@ -77,6 +79,31 @@ class _ReceiptScanScreenState extends State<ReceiptScanScreen>
     }
   }
 
+  Future<void> _captureImage() async {
+    final cam = _camera;
+    if (cam == null || !cam.value.isInitialized) return;
+
+    try {
+      final xFile = await cam.takePicture();
+      final bytes = await xFile.readAsBytes();
+      await saveReceiptImage(bytes);
+
+      if (mounted) {
+        context.push('/scan-loading', extra: bytes);
+      }
+    } on CameraException catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('촬영 실패: ${e.description ?? e.code}'),
+            backgroundColor: AppColors.error,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    }
+  }
+
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
@@ -127,7 +154,7 @@ class _ReceiptScanScreenState extends State<ReceiptScanScreen>
             left: 0,
             right: 0,
             bottom: 240,
-            child: _CameraControls(),
+            child: _CameraControls(onCapture: _captureImage),
           ),
           Align(
             alignment: Alignment.bottomCenter,
@@ -347,6 +374,10 @@ class _ScanFrame extends StatelessWidget {
 }
 
 class _CameraControls extends StatelessWidget {
+  const _CameraControls({required this.onCapture});
+
+  final VoidCallback onCapture;
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -355,7 +386,7 @@ class _CameraControls extends StatelessWidget {
         _RoundIconButton(icon: Symbols.flash_off, onTap: () {}),
         const SizedBox(width: 36),
         GestureDetector(
-          onTap: () {},
+          onTap: onCapture,
           child: Container(
             width: 80,
             height: 80,
