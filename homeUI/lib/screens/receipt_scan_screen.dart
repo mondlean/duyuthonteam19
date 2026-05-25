@@ -86,16 +86,10 @@ class _ReceiptScanScreenState extends State<ReceiptScanScreen>
     try {
       final xFile = await cam.takePicture();
       final bytes = await xFile.readAsBytes();
-      final savedPath = await saveReceiptImage(bytes);
+      await saveReceiptImage(bytes);
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('영수증이 저장되었습니다\n$savedPath'),
-            backgroundColor: AppColors.primary,
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
+        context.push('/scan-loading', extra: bytes);
       }
     } on CameraException catch (e) {
       if (mounted) {

@@ -137,7 +137,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     ),
                     const SizedBox(height: 28),
                     FilledButton(
-                      onPressed: () => context.go('/home'),
+                      onPressed: () => context.go('/plant-selection'),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [

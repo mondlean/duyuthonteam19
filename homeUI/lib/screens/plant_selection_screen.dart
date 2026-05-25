@@ -18,6 +18,7 @@ class PlantSelectionScreen extends StatefulWidget {
 class _PlantSelectionScreenState extends State<PlantSelectionScreen>
     with TickerProviderStateMixin {
   int? _selected;
+  final TextEditingController _nameController = TextEditingController();
 
   late final List<AnimationController> _cardControllers;
   late final List<Animation<double>> _fadeAnims;
@@ -96,6 +97,7 @@ class _PlantSelectionScreenState extends State<PlantSelectionScreen>
     for (final c in _cardControllers) {
       c.dispose();
     }
+    _nameController.dispose();
     super.dispose();
   }
 
@@ -139,6 +141,61 @@ class _PlantSelectionScreenState extends State<PlantSelectionScreen>
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: _buildCards(),
+                ),
+                AnimatedSize(
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeOutCubic,
+                  child: _selected != null
+                      ? Padding(
+                          padding: const EdgeInsets.only(top: 20),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: BackdropFilter(
+                              filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
+                              child: AnimatedContainer(
+                                duration: const Duration(milliseconds: 220),
+                                decoration: BoxDecoration(
+                                  color: AppColors.primaryContainer.withValues(alpha: 0.12),
+                                  borderRadius: BorderRadius.circular(20),
+                                  border: Border.all(
+                                    color: AppColors.primaryContainer.withValues(alpha: 0.35),
+                                  ),
+                                ),
+                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                                child: Row(
+                                  children: [
+                                    const Icon(
+                                      Symbols.local_florist,
+                                      size: 20,
+                                      color: AppColors.primary,
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Expanded(
+                                      child: TextField(
+                                        controller: _nameController,
+                                        style: AppTextStyles.koBody(
+                                          15,
+                                          color: AppColors.onSurface,
+                                        ),
+                                        decoration: InputDecoration(
+                                          hintText: '식물의 이름을 정해주세요',
+                                          hintStyle: AppTextStyles.koBody(
+                                            15,
+                                            color: AppColors.onSurfaceVariant,
+                                          ),
+                                          border: InputBorder.none,
+                                          isDense: true,
+                                          contentPadding: const EdgeInsets.symmetric(vertical: 14),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        )
+                      : const SizedBox.shrink(),
                 ),
                 const Spacer(),
                 Text(
