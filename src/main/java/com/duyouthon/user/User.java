@@ -33,6 +33,9 @@ public class User {
     @Column(name = "point")
     private int point = 0;
 
+    @Column(name = "plant")
+    private String plant;
+
     public void addPoint(int amount) {
         this.point += amount;
     }

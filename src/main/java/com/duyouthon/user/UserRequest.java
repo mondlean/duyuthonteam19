@@ -10,5 +10,6 @@ public class UserRequest {
     private  String name;
     private String area;
     private String city;
+    private  String plant;
 
 }

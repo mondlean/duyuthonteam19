@@ -14,7 +14,7 @@ public class UserService {
     }
 
 
-    public User join(String loginId, String password, String name,String area,String city) {
+    public User join(String loginId, String password, String name,String area,String city,String plant) {
 
         Random random = new Random();
         int randomNumber = random.nextInt(10000);
@@ -27,6 +27,8 @@ public class UserService {
         user.setUserTag(made_userTag);
         user.setArea(area);
         user.setCity(city);
+        user.setPoint(0);
+        user.setPlant(plant);
 
         return userRepository.save(user);
     }

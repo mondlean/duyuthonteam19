@@ -23,8 +23,8 @@ public class UserController {
         String name = request.getName();
         String area = request.getArea();
         String city = request.getCity();
-
-        userService.join(loginId,password,name,area,city);
+        String plant = request.getPlant();
+        userService.join(loginId,password,name,area,city,plant);
 
         return "정상적으로 회원가입이 완료되었습니다 !";
     }
