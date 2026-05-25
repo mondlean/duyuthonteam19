@@ -66,31 +66,43 @@ class HomeScreen extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            _buildSheetSectionTitle('계정 설정'),
-                            _buildSheetTile(Symbols.person, '프로필 사진 변경', () {}),
-                            _buildSheetTile(Symbols.badge, '회원가입 정보 수정', () {}),
-                            _buildSheetTile(Symbols.lock, '비밀번호 변경', () {}),
-                            _buildSheetTile(Symbols.alternate_email, '이메일 / 전화번호 변경', () {}),
-                            _buildSheetTile(Symbols.share, '소셜 계정 연동', () {}),
-                            
-                            const SizedBox(height: 24),
-                            
-                            _buildSheetSectionTitle('알림 설정'),
-                            _buildSheetSwitchTile(Symbols.notifications, '푸시 알림 ON/OFF', pushNotification, (val) {
-                              setModalState(() => pushNotification = val);
-                            }),
-                            _buildSheetSwitchTile(Symbols.campaign, '마케팅 알림 받기', marketingNotification, (val) {
-                              setModalState(() => marketingNotification = val);
-                            }),
-                            _buildSheetSwitchTile(Symbols.featured_seasonal_and_gifts, '이벤트 알림', eventNotification, (val) {
-                              setModalState(() => eventNotification = val);
-                            }),
-                            _buildSheetSwitchTile(Symbols.volume_up, '소리 / 진동 설정', soundVibration, (val) {
-                              setModalState(() => soundVibration = val);
-                            }),
-                            _buildSheetSwitchTile(Symbols.do_not_disturb_on, '방해금지 시간 설정', doNotDisturb, (val) {
-                              setModalState(() => doNotDisturb = val);
-                            }),
+                           // 1. 화면 및 스타일 설정 (기존 계정 설정 대체)
+_buildSheetSectionTitle('화면 및 스타일 설정'),
+_buildSheetTile(Symbols.palette, '테마 변경 (다크 / 라이트 모드)', () {
+  // 테마 변경 로직
+}),
+_buildSheetTile(Symbols.format_size, '글자 크기 조절', () {
+  // 글자 크기 설정 페이지 이동
+}),
+_buildSheetTile(Symbols.wallpaper, '배경화면 변경', () {
+  // 배경화면 선택 로직
+}),
+_buildSheetTile(Symbols.language, '언어 설정 (Language)', () {
+  // 다국어 설정 로직
+}),
+_buildSheetTile(Symbols.accessibility, '접근성 설정', () {
+  // 접근성 설정 페이지 이동
+}),
+
+const SizedBox(height: 24),
+
+// 2. 알림 및 소리 설정 (현실적인 기능 위주)
+_buildSheetSectionTitle('알림 및 소리 설정'),
+_buildSheetSwitchTile(Symbols.notifications_active, '푸시 알림 허용', pushNotification, (val) {
+  setModalState(() => pushNotification = val);
+}),
+_buildSheetSwitchTile(Symbols.volume_up, '소리 알림', soundVibration, (val) {
+  setModalState(() => soundVibration = val);
+}),
+_buildSheetSwitchTile(Symbols.do_not_disturb_on, '방해 금지 모드', doNotDisturb, (val) {
+  setModalState(() => doNotDisturb = val);
+}),
+_buildSheetSwitchTile(Symbols.mail, 'SMS 마케팅 수신 동의', marketingNotification, (val) {
+  setModalState(() => marketingNotification = val);
+}),
+_buildSheetSwitchTile(Symbols.celebration, '혜택 및 이벤트 앱 알림', eventNotification, (val) {
+  setModalState(() => eventNotification = val);
+}),
                             
                             const SizedBox(height: 32),
                             
