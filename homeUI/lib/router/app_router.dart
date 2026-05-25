@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import '../screens/home_screen.dart';
 import '../screens/login_screen.dart';
 import '../screens/onboarding_screen.dart';
+import '../screens/plant_selection_screen.dart';
 import '../screens/receipt_scan_screen.dart';
 import '../screens/rewards_screen.dart';
 import '../screens/signup_screen.dart';
@@ -22,6 +23,10 @@ GoRouter buildRouter() {
       GoRoute(
         path: '/signup',
         builder: (_, __) => const SignupScreen(),
+      ),
+      GoRoute(
+        path: '/plant-selection',
+        builder: (_, __) => const PlantSelectionScreen(),
       ),
       GoRoute(
         path: '/home',

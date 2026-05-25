@@ -30,7 +30,9 @@
       "Bash(winget install *)",
       "Bash(where flutter *)",
       "Bash(powershell.exe -NoProfile -Command \"& {refreshenv; flutter --version}\")",
-      "Read(//c/Users/user/AppData/Local/Programs/**)"
+      "Read(//c/Users/user/AppData/Local/Programs/**)",
+      "Bash(flutter pub *)",
+      "Bash(flutter analyze *)"
     ]
   }
 }
