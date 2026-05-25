@@ -12,7 +12,7 @@ class LuminaAppBar extends StatelessWidget implements PreferredSizeWidget {
     super.key,
     this.leading,
     this.trailing,
-    this.title = 'Lumina Nature',
+    this.title = '초록수증',
     this.showLogo = true,
   });
 
