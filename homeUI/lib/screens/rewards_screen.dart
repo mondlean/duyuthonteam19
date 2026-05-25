@@ -58,7 +58,7 @@ class _RewardsScreenState extends State<RewardsScreen> {
                   children: [
                     Expanded(
                       child: Text(
-                        'Recent Activity',
+                        '최근 활동',
                         style: AppTextStyles.titleMd.copyWith(
                           color: AppColors.onSurface,
                         ),
@@ -67,7 +67,7 @@ class _RewardsScreenState extends State<RewardsScreen> {
                     TextButton(
                       onPressed: () {},
                       child: Text(
-                        'VIEW ALL',
+                        '전체 보기',
                         style: AppTextStyles.labelMd.copyWith(
                           color: AppColors.primary,
                         ),
@@ -165,7 +165,7 @@ class _BalanceCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'CURRENT BALANCE',
+                '현재 보유 포인트',
                 style: AppTextStyles.labelMd.copyWith(  
                   color: AppColors.onSurfaceVariant,
                   letterSpacing: 1.5,
@@ -175,7 +175,7 @@ class _BalanceCard extends StatelessWidget {
               FittedBox(
                 fit: BoxFit.scaleDown,
                 child: Text(
-                  'Total Points: 20,250 P',
+                  '총 포인트: 20,250 P',
                   style: AppTextStyles.displayLg.copyWith(
                     color: AppColors.primary,
                     fontSize: 28,
@@ -198,7 +198,7 @@ class _BalanceCard extends StatelessWidget {
                             ),
                             onPressed: () => onViewModeChanged('home'),
                             child: Text(
-                              'REDEEM NOW',
+                              '포인트 사용',
                               style: AppTextStyles.labelMd.copyWith(
                                 color: AppColors.onPrimary,
                                 letterSpacing: 1.2,
@@ -213,7 +213,7 @@ class _BalanceCard extends StatelessWidget {
                             shadow: false,
                             child: Center(
                               child: Text(
-                                'REDEEM NOW',
+                                '포인트 사용',
                                 style: AppTextStyles.labelMd.copyWith(
                                   color: AppColors.onSurfaceVariant,
                                   letterSpacing: 1.2,
@@ -235,7 +235,7 @@ class _BalanceCard extends StatelessWidget {
                             ),
                             onPressed: () => onViewModeChanged('tier'),
                             child: Text(
-                              'TIER DETAILS',
+                              '티어 상세',
                               style: AppTextStyles.labelMd.copyWith(
                                 color: AppColors.onPrimary,
                                 letterSpacing: 1.2,
@@ -250,7 +250,7 @@ class _BalanceCard extends StatelessWidget {
                             shadow: false,
                             child: Center(
                               child: Text(
-                                'TIER DETAILS',
+                                '티어 상세',
                                 style: AppTextStyles.labelMd.copyWith(
                                   color: AppColors.onSurfaceVariant,
                                   letterSpacing: 1.2,
@@ -300,7 +300,7 @@ class _MyRankingCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'MY RANKING',
+                '내 순위',
                 style: AppTextStyles.labelMd.copyWith(
                   color: Colors.white.withValues(alpha: 0.6),
                   letterSpacing: 1.5,
@@ -351,7 +351,7 @@ class _MyRankingCard extends StatelessWidget {
                     const Icon(Symbols.workspace_premium, color: Colors.white, size: 14),
                     const SizedBox(width: 4),
                     Text(
-                      'GreenMaster Tier',
+                      '그린 마스터 티어',
                       style: AppTextStyles.labelMd.copyWith(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -384,11 +384,11 @@ class _LeaderboardCard extends StatelessWidget {
   Widget build(BuildContext context) {
     // 가상의 전국 스코어보드 고정 데이터셋
     final rankings = [
-      const _LeaderboardEntry(rank: 1, name: '김지우', tier: 'GrandMaster', points: '50,420 P'),
-      const _LeaderboardEntry(rank: 2, name: '이민재', tier: 'GrandMaster', points: '50,400 P'),
-      const _LeaderboardEntry(rank: 3, name: '박서연', tier: 'GreenMaster', points: '50,280 P'),
-      const _LeaderboardEntry(rank: 331, name: '나', tier: 'GreenMaster', points: '20,250 P', isMe: true),
-      const _LeaderboardEntry(rank: 332, name: '최윤서', tier: 'GreenMaster', points: '20,240 P'),
+      const _LeaderboardEntry(rank: 1, name: '김지우', tier: '그랜드 마스터', points: '50,420 P'),
+      const _LeaderboardEntry(rank: 2, name: '이민재', tier: '그랜드 마스터', points: '50,400 P'),
+      const _LeaderboardEntry(rank: 3, name: '박서연', tier: '그린 마스터', points: '50,280 P'),
+      const _LeaderboardEntry(rank: 331, name: '나', tier: '그린 마스터', points: '20,250 P', isMe: true),
+      const _LeaderboardEntry(rank: 332, name: '최윤서', tier: '그린 마스터', points: '20,240 P'),
     ];
 
     return GlassPanel(
@@ -533,7 +533,7 @@ class _WeeklyImpactCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Weekly Eco-Impact',
+                '주간 친환경 활동',
                 style: AppTextStyles.titleMd.copyWith(
                   color: AppColors.onSurface,
                 ),
@@ -606,7 +606,7 @@ class _WeeklyImpactCard extends StatelessWidget {
                 color: AppColors.onSurfaceVariant,
               ),
               children: [
-                const TextSpan(text: "You've reduced your carbon footprint by "),
+                const TextSpan(text: '이번 주 탄소 발자국을 '),
                 TextSpan(
                   text: '12kg',
                   style: AppTextStyles.bodySm.copyWith(
@@ -614,7 +614,7 @@ class _WeeklyImpactCard extends StatelessWidget {
                     fontWeight: FontWeight.w700,
                   ),
                 ),
-                const TextSpan(text: ' this week.'),
+                const TextSpan(text: ' 줄였어요.'),
               ],
             ),
           ),
@@ -712,32 +712,32 @@ const _activities = <_ActivityEntry>[
     icon: Symbols.coffee,
     iconColor: AppColors.onSecondaryContainer,
     tint: AppColors.secondaryContainer,
-    title: 'Cafe Receipt',
-    subtitle: 'Today, 10:24 AM',
+    title: '카페 영수증',
+    subtitle: '오늘 오전 10:24',
     points: '+10P',
   ),
   _ActivityEntry(
     icon: Symbols.shopping_bag,
     iconColor: AppColors.onPrimaryContainer,
     tint: AppColors.primaryContainer,
-    title: 'Eco-bag usage',
-    subtitle: 'Yesterday, 4:15 PM',
+    title: '에코백 사용',
+    subtitle: '어제 오후 4:15',
     points: '+5P',
   ),
   _ActivityEntry(
     icon: Symbols.recycling,
     iconColor: AppColors.onTertiaryContainer,
     tint: AppColors.tertiaryContainer,
-    title: 'Recycling Bin Drop-off',
-    subtitle: 'May 12, 11:30 AM',
+    title: '재활용 수거함 배출',
+    subtitle: '5월 12일 오전 11:30',
     points: '+25P',
   ),
   _ActivityEntry(
     icon: Symbols.electric_bolt,
     iconColor: AppColors.onSurfaceVariant,
     tint: AppColors.surfaceContainerHighest,
-    title: 'Smart Meter Sync',
-    subtitle: 'May 11, 8:00 AM',
+    title: '스마트 미터 연동',
+    subtitle: '5월 11일 오전 8:00',
     points: '+15P',
   ),
 ];

@@ -44,7 +44,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Text(
-                      'Welcome Back',
+                      '돌아오신 걸 환영해요',
                       textAlign: TextAlign.center,
                       style: AppTextStyles.headlineLgMobile.copyWith(
                         color: AppColors.primary,
@@ -52,7 +52,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     const SizedBox(height: 6),
                     Text(
-                      'Reconnecting with nature begins here.',
+                      '자연과의 연결이 여기서 시작돼요.',
                       textAlign: TextAlign.center,
                       style: AppTextStyles.bodySm.copyWith(
                         color: AppColors.onSurfaceVariant,
@@ -60,9 +60,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     const SizedBox(height: 32),
                     _LabeledField(
-                      label: 'ID',
+                      label: '아이디',
                       controller: _idCtrl,
-                      hint: 'Enter your ID',
+                      hint: '아이디를 입력하세요',
                       suffix: const Icon(
                         Symbols.person,
                         color: AppColors.outline,
@@ -70,11 +70,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     const SizedBox(height: 20),
                     _LabeledField(
-                      label: 'PASSWORD',
+                      label: '비밀번호',
                       controller: _pwCtrl,
                       hint: '••••••••',
                       obscure: _obscure,
-                      trailingLabel: 'Forgot Password?',
+                      trailingLabel: '비밀번호를 잊으셨나요?',
                       onTrailingTap: () {},
                       suffix: IconButton(
                         icon: Icon(
@@ -92,7 +92,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text('Log In', style: AppTextStyles.titleMd),
+                          Text('로그인', style: AppTextStyles.titleMd),
                           const SizedBox(width: 6),
                           const Icon(Symbols.arrow_forward, size: 20),
                         ],
@@ -106,12 +106,12 @@ class _LoginScreenState extends State<LoginScreen> {
                             color: AppColors.onSurfaceVariant,
                           ),
                           children: [
-                            const TextSpan(text: "Don't have an account? "),
+                            const TextSpan(text: '계정이 없으신가요? '),
                             WidgetSpan(
                               child: GestureDetector(
                                 onTap: () => context.push('/signup'),
                                 child: Text(
-                                  'Sign up',
+                                  '회원가입',
                                   style: AppTextStyles.bodySm.copyWith(
                                     color: AppColors.primary,
                                     fontWeight: FontWeight.w700,

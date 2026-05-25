@@ -493,7 +493,7 @@ class _Instructions extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          'Step 1/3',
+                          '1/3 단계',
                           style: AppTextStyles.labelMd.copyWith(
                             color: AppColors.onSurfaceVariant,
                           ),
