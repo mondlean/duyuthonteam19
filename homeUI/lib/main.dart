@@ -23,7 +23,7 @@ class DuyuApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: 'Lumina Nature',
+      title: '초록수증',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light(),
       routerConfig: buildRouter(),
